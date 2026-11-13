@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Builds the three level scenes from coordinate-based layouts.
+"""Builds the level scenes from coordinate-based layouts.
 
 The resulting .tscn files store the ASCII map as an exported string, so a
 level can also be tweaked directly in the Godot inspector afterwards.
-Run: python3 tools/build_levels.py
+Run: python3 tools/build_levels.py [level numbers...]   (default: all)
 """
 import os
+import sys
 
 OUT = os.path.join(os.path.dirname(__file__), "..", "scenes", "levels")
 
@@ -15,6 +16,7 @@ class Map:
         self.w, self.h = w, h
         self.g = [["." for _ in range(w)] for _ in range(h)]
         self.hints = []
+        self.waves = []
 
     def fill(self, x0, y0, x1, y1, ch="#"):
         for y in range(y0, y1 + 1):
@@ -32,6 +34,10 @@ class Map:
 
     def hint(self, x, y, text):
         self.hints.append(f"{x},{y}|{text}")
+
+    def wave(self, row, first_tick, interval, speed, bob=0):
+        """Flying enemies entering from the right edge (see Level.waves)."""
+        self.waves.append(f"{row}|{first_tick}|{interval}|{speed}|{bob}")
 
     def text(self):
         return "\n".join("".join(r) for r in self.g)
@@ -115,6 +121,27 @@ def level3():
     return m
 
 
+def level4():
+    # Flyers come in from the right, where the plate is. The run that becomes
+    # your echo has to dodge (or stomp) them while holding it, and the echo
+    # replays exactly that while you run left for the door.
+    m = Map(40, 23)
+    m.border()
+    m.fill(0, 18, 39, 22)                 # floor, top surface y=18
+    m.put(3, 17, "E")
+    m.fill(8, 1, 8, 12)                   # wall above the door
+    m.put(8, 13, "A")                     # door A, rows 13..17
+    m.put(20, 17, "P")
+    m.put(33, 17, "aa")                   # plate A, right in the flight path
+    m.wave(17, 0, 150, 70)                # low lane: standing height
+    m.wave(12, 75, 300, 45, 4)            # high lane: catches careless jumps
+    m.hint(12, 4, "THEY COME FROM THE RIGHT")
+    m.hint(12, 5, "LAND ON THEM TO BOUNCE")
+    m.hint(12, 8, "YOUR ECHO DODGES")
+    m.hint(12, 9, "WHAT YOU DODGED")
+    return m
+
+
 HEADER = """[gd_scene load_steps=2 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/levels/level_base.tscn" id="1_base"]
@@ -124,6 +151,7 @@ HEADER = """[gd_scene load_steps=2 format=3]
 
 def write(num, title, m):
     hints = ", ".join('"%s"' % h for h in m.hints)
+    waves = ", ".join('"%s"' % w for w in m.waves)
     body = (
         HEADER
         + f'[node name="Level{num}" instance=ExtResource("1_base")]\n'
@@ -131,6 +159,7 @@ def write(num, title, m):
         + f'level_title = "{title}"\n'
         + f'map = "{m.text()}"\n'
         + f"hints = PackedStringArray({hints})\n"
+        + (f"waves = PackedStringArray({waves})\n" if m.waves else "")
     )
     with open(os.path.join(OUT, f"level_{num}.tscn"), "w") as f:
         f.write(body)
@@ -138,7 +167,14 @@ def write(num, title, m):
     print(m.text())
 
 
+LEVELS = {
+    1: ("FIRST FALL", level1),
+    2: ("MEET YOUR ECHO", level2),
+    3: ("BOUNCE BACK", level3),
+    4: ("INCOMING", level4),
+}
+
 if __name__ == "__main__":
-    write(1, "FIRST FALL", level1())
-    write(2, "MEET YOUR ECHO", level2())
-    write(3, "BOUNCE BACK", level3())
+    for num in [int(a) for a in sys.argv[1:]] or LEVELS:
+        title, build = LEVELS[num]
+        write(num, title, build())
