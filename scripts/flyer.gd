@@ -53,6 +53,5 @@ func pop() -> void:
 	sprite.visible = false
 	burst.restart()
 	burst.emitting = true
-	var tw := create_tween()
-	tw.tween_interval(burst.lifetime)
-	tw.tween_callback(queue_free)
+	# The level frees it at the next attempt; it stays in the wave's
+	# bookkeeping so it isn't respawned during this one.

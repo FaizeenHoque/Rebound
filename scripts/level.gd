@@ -29,6 +29,7 @@ const TREES_TEX := preload("res://assets/sprites/decor_trees.png")
 const FAIL_MARK_TEX := preload("res://assets/sprites/fx_fail_mark.png")
 const STAR_TEX := preload("res://assets/sprites/fx_star.png")
 const DOTS_TEX := preload("res://assets/sprites/fx_dots.png")
+const FLYER_SCENE := preload("res://scenes/objects/flyer.tscn")
 
 ## Shown while the robot glitches out. [headline, subline]
 const FAIL_LINES := [
@@ -51,6 +52,9 @@ enum Phase { RESPAWNING, PLAYING, DYING, COMPLETE }
 @export_multiline var map := ""
 ## Floating hint text: "col,row|TEXT"
 @export var hints := PackedStringArray()
+## Flying enemy waves: "row|first_tick|interval|speed|bob". They enter from
+## the right edge of the level and fly left, locked to the attempt tick.
+@export var waves := PackedStringArray()
 
 var phase := Phase.RESPAWNING
 var attempt := 0
@@ -65,6 +69,8 @@ var doors: Array[Door] = []
 var pads: Array[BouncePad] = []
 var exit_portal: ExitPortal
 var spike_rects: Array[Rect2] = []
+## Live flyers, keyed "wave:index".
+var flyers := {}
 
 var _rec_pos := PackedVector2Array()
 var _rec_code := PackedInt32Array()
@@ -78,6 +84,7 @@ var _echo_attempt := 0
 var _echo_helped := false
 var _respawn_pad: BouncePad
 var _death_spot := Vector2.ZERO
+var _waves: Array[Dictionary] = []
 
 @onready var terrain: TileLayer = $Terrain
 @onready var solids: StaticBody2D = $Solids
@@ -112,6 +119,7 @@ func _ready() -> void:
 	_build_terrain()
 	_spawn_objects()
 	_spawn_hints()
+	_parse_waves()
 	_respawn_pad = PAD_SCENE.instantiate()
 	_respawn_pad.position = start_pos - Vector2(8, 0)
 	_respawn_pad.z_index = 1
@@ -136,6 +144,7 @@ func _physics_process(delta: float) -> void:
 			else:
 				_record()
 				echo.apply_tick(tick)
+				_update_flyers(tick)
 				tick += 1
 				_update_interactions()
 				_check_hazards()
@@ -191,6 +200,7 @@ func _start_attempt() -> void:
 	_rec_pos.clear()
 	_rec_code.clear()
 	_echo_on_pad = false
+	_clear_flyers()
 	player.respawn(start_pos)
 	echo.rewind(_new_echo)
 	if _new_echo:
@@ -276,6 +286,49 @@ func _complete() -> void:
 	var tw := player.create_tween()
 	tw.tween_property(player.visual, "scale", Vector2(0.0, 2.5), 0.35).set_ease(Tween.EASE_IN)
 	hud.toast("SIGNAL ESCAPED")
+
+
+# ------------------------------------------------------------------ flyers
+
+func _parse_waves() -> void:
+	for line in waves:
+		var f := line.split("|")
+		if f.size() < 5:
+			push_warning("Level: bad wave line '%s'" % line)
+			continue
+		_waves.append({
+			"y": int(f[0]) * TILE + TILE / 2.0, "first": int(f[1]),
+			"interval": maxi(1, int(f[2])), "speed": float(f[3]), "bob": float(f[4]),
+		})
+
+
+## Spawns, moves and despawns flyers for this tick. Every attempt sees the
+## same wave because positions depend only on the tick.
+func _update_flyers(t: int) -> void:
+	for w in _waves.size():
+		var wave: Dictionary = _waves[w]
+		var since: int = t - wave.first
+		if since >= 0 and since % wave.interval == 0:
+			var key := "%d:%d" % [w, since / wave.interval]
+			if not flyers.has(key):
+				var f: Flyer = FLYER_SCENE.instantiate()
+				f.setup(t, Vector2(map_w * TILE + 8, wave.y), wave.speed, wave.bob)
+				objects.add_child(f)
+				flyers[key] = f
+	for key in flyers.keys():
+		var f: Flyer = flyers[key]
+		if f.popped:
+			continue
+		f.place(t)
+		if f.position.x < -16.0:
+			f.queue_free()
+			flyers.erase(key)
+
+
+func _clear_flyers() -> void:
+	for f in flyers.values():
+		f.queue_free()
+	flyers.clear()
 
 
 # ------------------------------------------------------------------ interactions
