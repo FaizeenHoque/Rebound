@@ -222,7 +222,6 @@ func _bounce_back_effect() -> void:
 		player.squash(Vector2(1.45, 0.6))
 		player.dust.restart()
 		player.dust.emitting = true
-		Game.sfx("land", -6.0)
 		if not first:
 			camera.shake(1.0, 0.1))
 
@@ -248,7 +247,7 @@ func _kill_player(voluntary := false) -> void:
 	hud.fail_message(line[0], sub)
 	_leave_fail_mark(player.position)
 	player.die()
-	Game.sfx("death")
+	Game.sfx("rebound" if voluntary else "death")
 	camera.shake(4.0, 0.3)
 	_screen_glitch(1.0, Color("#f472b6"), 0.55)
 	_burst(player.position + Vector2(0, -7), Color("#f472b6"), 14)

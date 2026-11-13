@@ -16,6 +16,7 @@ const MAX_FALL := 300.0
 const JUMP_CUT := 0.5
 const COYOTE_TICKS := 6
 const BUFFER_TICKS := 7
+const HEAVY_LANDING := 285.0  # a flat full jump lands at ~255
 const BOUNCE_VELOCITY := -350.0
 
 ## Hitbox used for hazards / plates (relative to the feet origin).
@@ -131,7 +132,9 @@ func _on_land(impact: float) -> void:
 	dust.amount = 6 + int(6 * k)
 	dust.restart()
 	dust.emitting = true
-	Game.sfx("land", -10.0 + 8.0 * k)
+	# Vine boom, but only for genuinely big falls (it would get old fast).
+	if impact > HEAVY_LANDING:
+		Game.sfx("land", -4.0, 0.0)
 	landed.emit(impact)
 
 
