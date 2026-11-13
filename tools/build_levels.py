@@ -164,6 +164,29 @@ def level5():
     return m
 
 
+def level6():
+    # Two plates, two doors, and flyers sweeping the floor. Your echo has to
+    # hold A while you pass door A, then move to B while you wait between
+    # the doors, dodging.
+    m = Map(50, 23)
+    m.border()
+    m.fill(0, 18, 49, 22)                 # floor, top surface y=18
+    m.put(3, 17, "P")
+    m.put(6, 17, "aa")                    # plate A
+    m.put(16, 17, "bb")                   # plate B
+    m.fill(34, 1, 34, 12)
+    m.put(34, 13, "A")                    # door A
+    m.fill(40, 1, 40, 12)
+    m.put(40, 13, "B")                    # door B
+    m.put(46, 17, "E")
+    m.wave(17, 30, 160, 70)               # low lane
+    m.hint(5, 8, "HOLD A. THEN HOLD B.")
+    m.hint(5, 9, "DON'T STOP DODGING.")
+    m.hint(21, 4, "ONE ECHO. TWO DOORS.")
+    m.hint(21, 5, "INCOMING FIRE.")
+    return m
+
+
 HEADER = """[gd_scene load_steps=2 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/levels/level_base.tscn" id="1_base"]
@@ -195,6 +218,7 @@ LEVELS = {
     3: ("BOUNCE BACK", level3),
     4: ("INCOMING", level4),
     5: ("SPRING LOADED", level5),
+    6: ("CROSSFIRE", level6),
 }
 
 if __name__ == "__main__":

@@ -55,6 +55,13 @@ var SOLUTIONS := {
 		# attempt 2: hop the spikes and run through the held door
 		["playing"], ["dir", 1], ["x>=", 180], ["jump", 20], ["floor"],
 	],
+	6: [
+		# attempt 1: hold A, then B, hopping flyers the whole time
+		["playing"], ["autododge", true], ["goto", 56], ["tick>=", 200],
+		["goto", 136], ["tick>=", 560], ["rebound"],
+		# attempt 2: through A while the echo holds it, wait for B, out
+		["playing"], ["autododge", true], ["goto", 300], ["open", 1], ["dir", 1],
+	],
 }
 
 # Solo runs that must FAIL: proves doors block and the echo is required.
@@ -77,6 +84,11 @@ var NEGATIVE := {
 	5: [
 		["playing"], ["dir", -1], ["x<=", 40], ["floor"], ["goto", 16],
 		["autododge", true], ["wait", 60], ["dir", 1], ["x>=", 180], ["jump", 20], ["floor"],
+	],
+	# hold A, then B, then run alone: door A is shut
+	6: [
+		["playing"], ["autododge", true], ["goto", 56], ["wait", 60],
+		["goto", 136], ["wait", 60], ["dir", 1],
 	],
 }
 const NEGATIVE_LIMIT := 60 * 20

@@ -8,6 +8,7 @@ const LEVELS := [
 	"res://scenes/levels/level_3.tscn",
 	"res://scenes/levels/level_4.tscn",
 	"res://scenes/levels/level_5.tscn",
+	"res://scenes/levels/level_6.tscn",
 ]
 const MAIN_MENU := "res://scenes/ui/main_menu.tscn"
 const END_SCREEN := "res://scenes/ui/end_screen.tscn"
