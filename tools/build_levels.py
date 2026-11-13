@@ -143,8 +143,8 @@ def incoming():
 
 
 def spring_loaded():
-    # The plate is on a high ledge you can only reach with the spring. Flyers
-    # cross at ledge height, so the run that becomes your echo dodges up there.
+    # The plate is on a high ledge you can only reach with the spring: the
+    # echo works vertically too. No flyers yet; they arrive in Incoming.
     m = Map(56, 23)
     m.border()
     m.fill(0, 18, 55, 22)                 # floor, top surface y=18
@@ -156,7 +156,6 @@ def spring_loaded():
     m.fill(40, 1, 40, 12)                 # wall above the door
     m.put(40, 13, "A")                    # door A, rows 13..17
     m.put(50, 17, "E")
-    m.wave(8, 0, 200, 90)                 # ledge-height lane
     m.hint(13, 4, "UP IS THE WAY")
     m.hint(13, 5, "TO HOLD THE DOOR")
     m.hint(29, 10, "STILL TOO FAR?")

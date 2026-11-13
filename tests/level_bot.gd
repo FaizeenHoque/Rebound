@@ -26,9 +26,9 @@ var SOLUTIONS := {
 		["playing"], ["dir", 1], ["x>=", 252], ["jump", 20],
 	],
 	3: [
-		# attempt 1: spring up to the ledge, hold the plate, hop the flyers
+		# attempt 1: spring up to the ledge and hold the plate
 		["playing"], ["dir", -1], ["x<=", 40], ["floor"], ["goto", 16],
-		["autododge", true], ["wait", 360], ["rebound"],
+		["wait", 360], ["rebound"],
 		# attempt 2: hop the spikes and run through the held door
 		["playing"], ["dir", 1], ["x>=", 180], ["jump", 20], ["floor"],
 	],
@@ -78,7 +78,7 @@ var NEGATIVE := {
 	2: [["playing"], ["dir", 1], ["x>=", 252], ["jump", 20]],
 	3: [
 		["playing"], ["dir", -1], ["x<=", 40], ["floor"], ["goto", 16],
-		["autododge", true], ["wait", 60], ["dir", 1], ["x>=", 180], ["jump", 20], ["floor"],
+		["wait", 60], ["dir", 1], ["x>=", 180], ["jump", 20], ["floor"],
 	],
 	4: [
 		["playing"], ["dir", -1], ["x<=", 30], ["wait", 50], ["dir", 1],
