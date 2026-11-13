@@ -14,7 +14,6 @@ var _t := 0.0
 @onready var line1: Label = $Line1
 @onready var line2: Label = $Line2
 @onready var stats: Label = $Stats
-@onready var confetti: CPUParticles2D = $Confetti
 @onready var hearts: CPUParticles2D = $Hearts
 @onready var menu_btn: Button = $Menu
 
@@ -52,7 +51,6 @@ func _ready() -> void:
 	tw.tween_interval(0.4)
 	tw.tween_callback(func() -> void:
 		Game.sfx("complete")
-		confetti.emitting = true
 		hearts.emitting = true
 		_robot.frame = 16)
 	tw.tween_property(line2, "visible_ratio", 1.0, 1.0)
@@ -82,9 +80,4 @@ func _process(delta: float) -> void:
 	# the echoes idle in a gentle wave; the robot hops for joy once freed
 	for i in _echoes.size():
 		_echoes[i].frame = [0, 1, 2, 1][int(_t * 5.0 + i) % 4]
-	if confetti.emitting:
-		var hop := absf(sin(_t * 6.0)) * 6.0
-		_robot.position.y = FLOOR_Y - hop
-		_robot.frame = 16 if hop > 1.0 else 0
-	else:
-		_robot.frame = [0, 1, 2, 1][int(_t * 5.0) % 4]
+	_robot.frame = [0, 1, 2, 1][int(_t * 5.0) % 4]	
