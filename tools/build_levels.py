@@ -142,6 +142,28 @@ def level4():
     return m
 
 
+def level5():
+    # The plate is on a high ledge you can only reach with the spring. Flyers
+    # cross at ledge height, so the run that becomes your echo dodges up there.
+    m = Map(56, 23)
+    m.border()
+    m.fill(0, 18, 55, 22)                 # floor, top surface y=18
+    m.put(4, 17, "oo")                    # spring up to the ledge
+    m.put(1, 9, "-" * 11)                 # one-way ledge (top y=9)
+    m.put(1, 8, "aa")                     # plate A on the ledge
+    m.put(14, 17, "P")
+    m.put(24, 17, "^^^^")                 # spikes to hop
+    m.fill(40, 1, 40, 12)                 # wall above the door
+    m.put(40, 13, "A")                    # door A, rows 13..17
+    m.put(50, 17, "E")
+    m.wave(8, 0, 200, 90)                 # ledge-height lane
+    m.hint(13, 4, "UP IS THE WAY")
+    m.hint(13, 5, "TO HOLD THE DOOR")
+    m.hint(29, 10, "STILL TOO FAR?")
+    m.hint(29, 11, "GOOD. YOU KNOW WHAT TO DO")
+    return m
+
+
 HEADER = """[gd_scene load_steps=2 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/levels/level_base.tscn" id="1_base"]
@@ -172,6 +194,7 @@ LEVELS = {
     2: ("MEET YOUR ECHO", level2),
     3: ("BOUNCE BACK", level3),
     4: ("INCOMING", level4),
+    5: ("SPRING LOADED", level5),
 }
 
 if __name__ == "__main__":

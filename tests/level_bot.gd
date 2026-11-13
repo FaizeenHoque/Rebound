@@ -9,6 +9,7 @@ const T := 8
 # Commands: ["dir", d] ["jump", hold_ticks] ["x>=", px] ["x<=", px]
 # ["wait", ticks] ["rebound"] ["playing"] ["open", door_idx] ["floor"]
 # ["tick>=", t] (level attempt tick) ["flyer<=", px] (a low flyer is within px ahead)
+# ["goto", px] (walk to x, then stop) ["autododge", on] (jump any low flyer that gets close)
 var SOLUTIONS := {
 	1: [
 		["playing"], ["dir", 1],
@@ -47,6 +48,13 @@ var SOLUTIONS := {
 		# attempt 2: run for the door while the echo holds the plate
 		["playing"], ["dir", -1], ["x<=", 84], ["open", 0],
 	],
+	5: [
+		# attempt 1: spring up to the ledge, hold the plate, hop the flyers
+		["playing"], ["dir", -1], ["x<=", 40], ["floor"], ["goto", 16],
+		["autododge", true], ["wait", 360], ["rebound"],
+		# attempt 2: hop the spikes and run through the held door
+		["playing"], ["dir", 1], ["x>=", 180], ["jump", 20], ["floor"],
+	],
 }
 
 # Solo runs that must FAIL: proves doors block and the echo is required.
@@ -66,6 +74,10 @@ var NEGATIVE := {
 		["flyer<=", 30], ["jump", 20], ["floor"],
 		["flyer<=", 30], ["jump", 20], ["floor"], ["x<=", 20],
 	],
+	5: [
+		["playing"], ["dir", -1], ["x<=", 40], ["floor"], ["goto", 16],
+		["autododge", true], ["wait", 60], ["dir", 1], ["x>=", 180], ["jump", 20], ["floor"],
+	],
 }
 const NEGATIVE_LIMIT := 60 * 20
 
@@ -80,6 +92,7 @@ var jump_prev := false
 var wait_left := 0
 var ticks := 0
 var results := []
+var autododge := false
 
 
 func _ready() -> void:
@@ -99,6 +112,7 @@ func _load_level(n: int) -> void:
 	dir = 0.0
 	jump_hold = 0
 	ticks = 0
+	autododge = false
 	await get_tree().process_frame
 	level.completed.connect(_on_completed)
 
@@ -193,11 +207,20 @@ func _physics_process(_delta: float) -> void:
 			"open": done = level.doors[c[1]].is_open
 			"tick>=": done = level.tick >= c[1]
 			"flyer<=": done = _flyer_ahead(p) <= c[1]
+			"goto":
+				dir = signf(c[1] - p.position.x)
+				done = absf(c[1] - p.position.x) < 2.5
+				if done:
+					dir = 0.0
+			"autododge": autododge = c[1]
 		if not done:
 			break
 		pc += 1
 		if rebound or jump_pressed:
 			break
+	if autododge and not jump_pressed and p.is_on_floor() and _flyer_ahead(p) <= 30.0:
+		jump_pressed = true
+		jump_hold = 20
 	var held := jump_hold > 0
 	if jump_hold > 0:
 		jump_hold -= 1
