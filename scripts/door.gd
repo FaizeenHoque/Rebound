@@ -40,7 +40,7 @@ func body_rect() -> Rect2:
 func set_open(o: bool, player_inside: bool) -> void:
 	if o != is_open:
 		is_open = o
-		Game.sfx("door", -6.0 if o else -9.0)
+		Game.sfx("door_open" if o else "door_close", -4.0 if o else -8.0)
 		sparks.restart()
 		sparks.emitting = true
 	var want_collision := not is_open and not player_inside
