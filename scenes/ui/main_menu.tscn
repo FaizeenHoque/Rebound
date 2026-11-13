@@ -1,0 +1,107 @@
+[gd_scene format=3 uid="uid://bp6a7atc2kxlj"]
+
+[ext_resource type="Script" uid="uid://dwexk2pps6mle" path="res://scripts/main_menu.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://bnfsp12jsqrpm" path="res://scripts/level_background.gd" id="2_bg"]
+[ext_resource type="Texture2D" uid="uid://s7wimsqch1hb" path="res://assets/sprites/robot.png" id="3_robot"]
+[ext_resource type="Shader" uid="uid://fud0xcgw1mio" path="res://shaders/echo.gdshader" id="4_echo"]
+
+[sub_resource type="ShaderMaterial" id="echo_mat"]
+shader = ExtResource("4_echo")
+shader_parameter/tint = Color(0.133333, 0.827451, 0.933333, 1)
+shader_parameter/alpha = 0.55
+shader_parameter/glitch = 0.0
+
+[node name="MainMenu" type="Control" unique_id=287748163]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 320.0
+offset_bottom = 180.0
+script = ExtResource("1_script")
+
+[node name="Background" type="Node2D" parent="." unique_id=2104627545]
+script = ExtResource("2_bg")
+autoscroll_speed = 12.0
+
+[node name="Floor" type="ColorRect" parent="." unique_id=1127416980]
+layout_mode = 0
+offset_top = 150.0
+offset_right = 320.0
+offset_bottom = 180.0
+color = Color(0.129412, 0.105882, 0.219608, 1)
+
+[node name="FloorEdge" type="ColorRect" parent="." unique_id=1584281396]
+layout_mode = 0
+offset_top = 150.0
+offset_right = 320.0
+offset_bottom = 151.0
+color = Color(0.482353, 0.423529, 0.815686, 1)
+
+[node name="EchoSprite" type="Sprite2D" parent="." unique_id=462863211]
+material = SubResource("echo_mat")
+position = Vector2(138, 142)
+texture = ExtResource("3_robot")
+hframes = 8
+vframes = 4
+frame = 8
+
+[node name="Robot" type="Sprite2D" parent="." unique_id=1787738083]
+position = Vector2(162, 142)
+texture = ExtResource("3_robot")
+hframes = 8
+vframes = 4
+frame = 8
+
+[node name="TitleGhost" type="Label" parent="." unique_id=421071433]
+visible = false
+modulate = Color(0.956863, 0.447059, 0.713725, 0.7)
+layout_mode = 0
+offset_left = 112.0
+offset_top = 30.0
+offset_right = 160.0
+offset_bottom = 38.0
+scale = Vector2(4, 4)
+text = "RE:BOUND"
+
+[node name="Title" type="Label" parent="." unique_id=835586197]
+layout_mode = 0
+offset_left = 63.0
+offset_top = 30.0
+offset_right = 111.0
+offset_bottom = 38.0
+scale = Vector2(4, 4)
+theme_override_colors/font_color = Color(0.647059, 0.952941, 0.988235, 1)
+text = "RE:BOUND"
+
+[node name="Tagline" type="Label" parent="." unique_id=1782105531]
+layout_mode = 0
+offset_top = 66.0
+offset_right = 320.0
+offset_bottom = 74.0
+theme_override_colors/font_color = Color(0.654902, 0.545098, 0.980392, 1)
+text = "EVERY FAILURE CHANGES THE WORLD."
+horizontal_alignment = 1
+
+[node name="Buttons" type="VBoxContainer" parent="." unique_id=1103027857]
+layout_mode = 0
+offset_left = 130.0
+offset_top = 86.0
+offset_right = 190.0
+offset_bottom = 120.0
+theme_override_constants/separation = 4
+
+[node name="Play" type="Button" parent="Buttons" unique_id=880820718]
+layout_mode = 2
+text = "PLAY"
+
+[node name="Quit" type="Button" parent="Buttons" unique_id=1135135959]
+layout_mode = 2
+text = "QUIT"
+
+[node name="Controls" type="Label" parent="." unique_id=1804431871]
+modulate = Color(0.560784, 0.607843, 0.74902, 1)
+layout_mode = 0
+offset_top = 162.0
+offset_right = 320.0
+offset_bottom = 170.0
+text = "A/D MOVE   SPACE JUMP   R REBOUND"
+horizontal_alignment = 1

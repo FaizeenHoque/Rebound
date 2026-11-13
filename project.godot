@@ -10,14 +10,31 @@ config_version=5
 
 [application]
 
-config/name="bounce back"
+config/name="RE:BOUND"
+config/description="Every failure changes the world."
+run/main_scene="res://scenes/ui/main_menu.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
-config/icon="res://icon.svg"
+boot_splash/bg_color=Color(0.0627451, 0.0941176, 0.152941, 1)
+boot_splash/show_image=false
+config/icon="res://assets/sprites/icon.png"
+
+[autoload]
+
+Game="*res://scripts/game.gd"
 
 [display]
 
-window/stretch/mode="canvas_items"
-window/stretch/aspect="expand"
+window/size/viewport_width=320
+window/size/viewport_height=180
+window/size/mode=3
+window/size/window_width_override=1280
+window/size/window_height_override=720
+window/stretch/mode="viewport"
+window/stretch/scale_mode="integer"
+
+[gui]
+
+theme/custom="res://assets/fonts/ui_theme.tres"
 
 [physics]
 
@@ -25,6 +42,10 @@ window/stretch/aspect="expand"
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.0627451, 0.0941176, 0.152941, 1)
+2d/snap/snap_2d_transforms_to_pixel=true
+2d/snap/snap_2d_vertices_to_pixel=true

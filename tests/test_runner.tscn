@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/level_bot.gd" id="1_bot"]
+
+[node name="TestRunner" type="Node"]
+
+[node name="Bot" type="Node" parent="."]
+script = ExtResource("1_bot")
