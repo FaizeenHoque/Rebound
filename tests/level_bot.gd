@@ -8,6 +8,7 @@ const T := 8
 
 # Commands: ["dir", d] ["jump", hold_ticks] ["x>=", px] ["x<=", px]
 # ["wait", ticks] ["rebound"] ["playing"] ["open", door_idx] ["floor"]
+# ["tick>=", t] (level attempt tick) ["flyer<=", px] (a low flyer is within px ahead)
 var SOLUTIONS := {
 	1: [
 		["playing"], ["dir", 1],
@@ -36,6 +37,16 @@ var SOLUTIONS := {
 		["x>=", 328], ["jump", 20], ["floor"],
 		["x>=", 392], ["open", 1],
 	],
+	4: [
+		# attempt 1: reach the plate, dodging flyers, then hold it while they keep coming
+		["playing"], ["dir", 1], ["flyer<=", 30], ["jump", 20], ["floor"],
+		["x>=", 268], ["dir", -1], ["x<=", 276], ["dir", 0],
+		["flyer<=", 30], ["jump", 20], ["floor"],
+		["flyer<=", 30], ["jump", 20], ["floor"],
+		["wait", 10], ["rebound"],
+		# attempt 2: run for the door while the echo holds the plate
+		["playing"], ["dir", -1], ["x<=", 84], ["open", 0],
+	],
 }
 
 # Solo runs that must FAIL: proves doors block and the echo is required.
@@ -47,6 +58,13 @@ var NEGATIVE := {
 		["playing"], ["dir", 1], ["x>=", 236], ["open", 0],
 		["x>=", 280], ["jump", 20], ["floor"],
 		["x>=", 328], ["jump", 20], ["floor"], ["x>=", 392],
+	],
+	# hold the plate, then run for the door alone: it shuts before you get there
+	4: [
+		["playing"], ["dir", 1], ["flyer<=", 30], ["jump", 20], ["floor"],
+		["x>=", 268], ["dir", 0], ["wait", 60], ["dir", -1],
+		["flyer<=", 30], ["jump", 20], ["floor"],
+		["flyer<=", 30], ["jump", 20], ["floor"], ["x<=", 20],
 	],
 }
 const NEGATIVE_LIMIT := 60 * 20
@@ -91,11 +109,24 @@ func _on_completed() -> void:
 		_finish(false)
 		return
 	results.append("LEVEL %d: COMPLETED in %d ticks, attempts=%d" % [level_idx, ticks, level.attempt])
-	if level_idx < 3:
+	if level_idx < Game.LEVELS.size():
 		_load_level(level_idx + 1)
 	else:
 		negative_phase = true
 		_load_level(2)
+
+
+## Distance to the nearest unpopped flyer to the player's right (flyers
+## always come from the right) at roughly standing height; INF if none.
+func _flyer_ahead(p: Player) -> float:
+	var best := INF
+	for f: Flyer in level.flyers.values():
+		if f.popped or absf(f.position.y - (p.position.y - 6.0)) > 14.0:
+			continue
+		var d := f.position.x - p.position.x
+		if d >= 0.0 and d < best:
+			best = d
+	return best
 
 
 func _finish(ok: bool) -> void:
@@ -120,10 +151,12 @@ func _physics_process(_delta: float) -> void:
 	if negative_phase and ticks > NEGATIVE_LIMIT:
 		var door_x := level.doors[level.doors.size() - 1].position.x
 		results.append("NEGATIVE LEVEL %d: blocked as expected (player x=%.0f, final door x=%.0f)" % [level_idx, level.player.position.x, door_x])
-		if level.player.position.x >= door_x:
+		# "past the door" means on the exit's side of it
+		var side := signf(level.exit_portal.position.x - door_x)
+		if (level.player.position.x - door_x) * side > 0.0:
 			_finish(false)
-		elif level_idx == 2:
-			_load_level(3)
+		elif level_idx < Game.LEVELS.size():
+			_load_level(level_idx + 1)
 		else:
 			_finish(true)
 		return
@@ -158,6 +191,8 @@ func _physics_process(_delta: float) -> void:
 			"playing": done = level.phase == Level.Phase.PLAYING
 			"floor": done = p.is_on_floor() and p.velocity.y >= 0
 			"open": done = level.doors[c[1]].is_open
+			"tick>=": done = level.tick >= c[1]
+			"flyer<=": done = _flyer_ahead(p) <= c[1]
 		if not done:
 			break
 		pc += 1

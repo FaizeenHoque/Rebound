@@ -26,7 +26,7 @@ func _ready() -> void:
 	await get_tree().create_timer(1.2).timeout
 	s = get_tree().current_scene
 	print("after restart: ", s.name, " attempt=", s.get("attempt"), " echo=", s.echo.has_recording())
-	Game.current_level = 2
+	Game.current_level = Game.LEVELS.size() - 1
 	Game.level_completed()
 	await get_tree().create_timer(1.2).timeout
 	print("after final level: ", get_tree().current_scene.name)
