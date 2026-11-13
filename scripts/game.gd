@@ -11,6 +11,8 @@ const LEVELS := [
 const MAIN_MENU := "res://scenes/ui/main_menu.tscn"
 const END_SCREEN := "res://scenes/ui/end_screen.tscn"
 const INTRO := "res://scenes/ui/intro.tscn"
+const LEVEL_SELECT := "res://scenes/ui/level_select.tscn"
+const PROGRESS_FILE := "user://progress.cfg"
 ## Meme sound slots -> number of clips (assets/audio/meme/<slot>_<i>.ogg,
 ## produced by tools/fetch_meme_sfx.py). Pools pick randomly, never twice in a row.
 const SFX := {
@@ -26,6 +28,10 @@ const VOICE_SLOTS := ["death", "rebound", "echo", "complete", "plate_on", "plate
 var test_mode := false
 var current_level := 0
 var failures := 0
+## Level indices the player has finished at least once (saved to disk).
+var cleared := {}
+## Tests turn this off so they never touch the player's save file.
+var persist := true
 
 var _sfx := {}         # slot -> Array[AudioStream]
 var _last_pick := {}   # slot -> index of the clip played last time
@@ -44,6 +50,7 @@ func _ready() -> void:
 	# Quit through quit_game() so audio is released cleanly (no leak errors).
 	get_tree().auto_accept_quit = false
 	_setup_input()
+	_load_progress()
 	for slot in SFX:
 		var clips: Array[AudioStream] = []
 		for i in SFX[slot]:
@@ -182,6 +189,12 @@ func start_game() -> void:
 	change_scene(INTRO)
 
 
+## Starts a single level from the level select.
+func start_level(index: int) -> void:
+	failures = 0
+	go_to_level(index)
+
+
 func go_to_level(index: int) -> void:
 	current_level = index
 	change_scene(LEVELS[index])
@@ -198,10 +211,41 @@ func to_main_menu() -> void:
 func level_completed() -> void:
 	if test_mode:
 		return
+	cleared[current_level] = true
+	_save_progress()
 	if current_level + 1 < LEVELS.size():
 		go_to_level(current_level + 1)
 	else:
 		change_scene(END_SCREEN)
+
+
+func to_level_select() -> void:
+	change_scene(LEVEL_SELECT)
+
+
+## A level's title, read from its scene so it can't drift out of sync.
+## (Instancing is cheap: levels only build themselves on entering the tree.)
+func level_title(index: int) -> String:
+	var lvl := (load(LEVELS[index]) as PackedScene).instantiate()
+	var t: String = lvl.level_title
+	lvl.free()
+	return t
+
+
+func _load_progress() -> void:
+	var cfg := ConfigFile.new()
+	if cfg.load(PROGRESS_FILE) != OK:
+		return
+	for i in cfg.get_value("progress", "cleared", []):
+		cleared[int(i)] = true
+
+
+func _save_progress() -> void:
+	if not persist:
+		return
+	var cfg := ConfigFile.new()
+	cfg.set_value("progress", "cleared", cleared.keys())
+	cfg.save(PROGRESS_FILE)
 
 
 func is_transitioning() -> bool:

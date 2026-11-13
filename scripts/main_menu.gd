@@ -18,9 +18,11 @@ func _ready() -> void:
 	title.position.x = _title_x
 	$Background.setup(Vector2(320, 180))
 	play_btn.pressed.connect(_on_play)
+	$Buttons/Levels.pressed.connect(_on_levels)
 	$Buttons/Quit.pressed.connect(_on_quit)
 	play_btn.grab_focus()
 	play_btn.focus_entered.connect(func() -> void: Game.sfx("select", -8.0))
+	$Buttons/Levels.focus_entered.connect(func() -> void: Game.sfx("select", -8.0))
 	$Buttons/Quit.focus_entered.connect(func() -> void: Game.sfx("select", -8.0))
 
 
@@ -42,6 +44,11 @@ func _process(delta: float) -> void:
 func _on_play() -> void:
 	Game.sfx("select")
 	Game.start_game()
+
+
+func _on_levels() -> void:
+	Game.sfx("select")
+	Game.to_level_select()
 
 
 func _on_quit() -> void:
