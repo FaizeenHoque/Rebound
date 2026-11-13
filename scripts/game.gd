@@ -10,19 +10,28 @@ const LEVELS := [
 const MAIN_MENU := "res://scenes/ui/main_menu.tscn"
 const END_SCREEN := "res://scenes/ui/end_screen.tscn"
 const INTRO := "res://scenes/ui/intro.tscn"
-const SFX_NAMES := [
-	"jump", "land", "death", "echo", "plate_on", "plate_off",
-	"door", "bounce", "complete", "respawn", "select",
-]
+## Meme sound slots -> number of clips (assets/audio/meme/<slot>_<i>.ogg,
+## produced by tools/fetch_meme_sfx.py). Pools pick randomly, never twice in a row.
+const SFX := {
+	"jump": 1, "land": 1, "death": 6, "rebound": 1, "echo": 1,
+	"plate_on": 1, "plate_off": 1, "door_open": 1, "door_close": 1,
+	"bounce": 1, "complete": 2, "respawn": 1, "select": 1,
+}
+## Voice lines share one channel so they never talk over each other: a new
+## line waits for the current one (at most one waits; extras are dropped).
+const VOICE_SLOTS := ["death", "rebound", "echo", "complete", "plate_on", "plate_off", "door_open", "door_close"]
 
 ## Set by the automated test runner: disables scene transitions on completion.
 var test_mode := false
 var current_level := 0
 var failures := 0
 
-var _sfx := {}
+var _sfx := {}         # slot -> Array[AudioStream]
+var _last_pick := {}   # slot -> index of the clip played last time
 var _voices: Array[AudioStreamPlayer] = []
 var _next_voice := 0
+var _voice_line: AudioStreamPlayer
+var _queued_line := []  # [slot, volume_db] waiting for the voice channel
 var _music: AudioStreamPlayer
 var _fade: ColorRect
 var _transitioning := false
@@ -34,12 +43,18 @@ func _ready() -> void:
 	# Quit through quit_game() so audio is released cleanly (no leak errors).
 	get_tree().auto_accept_quit = false
 	_setup_input()
-	for sfx_name in SFX_NAMES:
-		_sfx[sfx_name] = load("res://assets/audio/%s.wav" % sfx_name)
+	for slot in SFX:
+		var clips: Array[AudioStream] = []
+		for i in SFX[slot]:
+			clips.append(load("res://assets/audio/meme/%s_%d.ogg" % [slot, i]))
+		_sfx[slot] = clips
 	for i in 10:
 		var p := AudioStreamPlayer.new()
 		add_child(p)
 		_voices.append(p)
+	_voice_line = AudioStreamPlayer.new()
+	add_child(_voice_line)
+	_voice_line.finished.connect(_play_queued_line)
 	_setup_music()
 	_setup_fade()
 
@@ -67,9 +82,11 @@ func _release_audio() -> void:
 	if _music:
 		_music.stop()
 		_music.stream = null
-	for p in _voices:
-		p.stop()
-		p.stream = null
+	_queued_line = []
+	for p in _voices + [_voice_line]:
+		if p:
+			p.stop()
+			p.stream = null
 
 
 # ------------------------------------------------------------------ input
@@ -106,14 +123,45 @@ func _bind(action: String, keys: Array, buttons: Array) -> void:
 # ------------------------------------------------------------------ audio
 
 func sfx(sfx_name: String, volume_db := 0.0, pitch_jitter := 0.05) -> void:
-	if not _sfx.has(sfx_name):
+	if not _sfx.has(sfx_name) or _quitting:
+		return
+	if sfx_name in VOICE_SLOTS:
+		if _voice_line.playing:
+			if _queued_line.is_empty():
+				_queued_line = [sfx_name, volume_db]
+			return
+		_play_line(sfx_name, volume_db)
 		return
 	var p := _voices[_next_voice]
 	_next_voice = (_next_voice + 1) % _voices.size()
-	p.stream = _sfx[sfx_name]
+	p.stream = _pick(sfx_name)
 	p.volume_db = volume_db - 4.0
 	p.pitch_scale = 1.0 + randf_range(-pitch_jitter, pitch_jitter)
 	p.play()
+
+
+## Random clip from a slot's pool, avoiding an immediate repeat.
+func _pick(slot: String) -> AudioStream:
+	var clips: Array = _sfx[slot]
+	var i := randi() % clips.size()
+	if clips.size() > 1 and i == _last_pick.get(slot, -1):
+		i = (i + 1 + randi() % (clips.size() - 1)) % clips.size()
+	_last_pick[slot] = i
+	return clips[i]
+
+
+func _play_line(slot: String, volume_db: float) -> void:
+	_voice_line.stream = _pick(slot)
+	_voice_line.volume_db = volume_db - 2.0
+	_voice_line.play()
+
+
+func _play_queued_line() -> void:
+	if _queued_line.is_empty() or _quitting:
+		return
+	var q := _queued_line
+	_queued_line = []
+	_play_line(q[0], q[1])
 
 
 func _setup_music() -> void:
