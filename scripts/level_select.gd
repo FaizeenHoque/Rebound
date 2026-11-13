@@ -15,7 +15,7 @@ func _ready() -> void:
 		b.custom_minimum_size = Vector2(132, 0)
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.text = "%d  %s" % [i + 1, Game.level_title(i)]
-		if Game.cleared.has(i):
+		if Game.is_cleared(i):
 			b.text += "  CLEAR"
 			b.add_theme_color_override("font_color", CLEAR_COLOR)
 		b.pressed.connect(_on_level.bind(i))

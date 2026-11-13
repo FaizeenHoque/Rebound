@@ -16,6 +16,10 @@ const END_SCREEN := "res://scenes/ui/end_screen.tscn"
 const INTRO := "res://scenes/ui/intro.tscn"
 const LEVEL_SELECT := "res://scenes/ui/level_select.tscn"
 const PROGRESS_FILE := "user://progress.cfg"
+## Level order of the first progress format, which saved positions instead of
+## names. Only used to convert those saves.
+const LEGACY_ORDER := ["FIRST FALL", "MEET YOUR ECHO", "BOUNCE BACK", "INCOMING",
+	"SPRING LOADED", "CROSSFIRE", "LAST BOUNCE"]
 ## Meme sound slots -> number of clips (assets/audio/meme/<slot>_<i>.ogg,
 ## produced by tools/fetch_meme_sfx.py). Pools pick randomly, never twice in a row.
 const SFX := {
@@ -31,7 +35,8 @@ const VOICE_SLOTS := ["death", "rebound", "echo", "complete", "plate_on", "plate
 var test_mode := false
 var current_level := 0
 var failures := 0
-## Level indices the player has finished at least once (saved to disk).
+## Titles of levels the player has finished at least once (saved to disk).
+## Keyed by title, not position, so reordering levels never shifts them.
 var cleared := {}
 ## Tests turn this off so they never touch the player's save file.
 var persist := true
@@ -214,7 +219,7 @@ func to_main_menu() -> void:
 func level_completed() -> void:
 	if test_mode:
 		return
-	cleared[current_level] = true
+	cleared[level_title(current_level)] = true
 	_save_progress()
 	if current_level + 1 < LEVELS.size():
 		go_to_level(current_level + 1)
@@ -224,6 +229,10 @@ func level_completed() -> void:
 
 func to_level_select() -> void:
 	change_scene(LEVEL_SELECT)
+
+
+func is_cleared(index: int) -> bool:
+	return cleared.has(level_title(index))
 
 
 ## A level's title, read from its scene so it can't drift out of sync.
@@ -239,15 +248,21 @@ func _load_progress() -> void:
 	var cfg := ConfigFile.new()
 	if cfg.load(PROGRESS_FILE) != OK:
 		return
-	for i in cfg.get_value("progress", "cleared", []):
-		cleared[int(i)] = true
+	for t in cfg.get_value("progress", "cleared_levels", []):
+		cleared[str(t)] = true
+	# convert the old position-based format once
+	if cfg.has_section_key("progress", "cleared"):
+		for i in cfg.get_value("progress", "cleared", []):
+			if int(i) >= 0 and int(i) < LEGACY_ORDER.size():
+				cleared[LEGACY_ORDER[int(i)]] = true
+		_save_progress()
 
 
 func _save_progress() -> void:
 	if not persist:
 		return
 	var cfg := ConfigFile.new()
-	cfg.set_value("progress", "cleared", cleared.keys())
+	cfg.set_value("progress", "cleared_levels", cleared.keys())
 	cfg.save(PROGRESS_FILE)
 
 
