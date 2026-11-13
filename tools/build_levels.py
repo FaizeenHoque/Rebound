@@ -43,7 +43,7 @@ class Map:
         return "\n".join("".join(r) for r in self.g)
 
 
-def level1():
+def first_fall():
     # Teaches: falling is not the end. The only way up to the exit is DOWN.
     m = Map(84, 23)
     m.border()
@@ -70,7 +70,7 @@ def level1():
     return m
 
 
-def level2():
+def meet_your_echo():
     m = Map(60, 23)
     m.border()
     m.fill(0, 18, 59, 22)
@@ -90,7 +90,7 @@ def level2():
     return m
 
 
-def level3():
+def bounce_back():
     m = Map(72, 31)
     m.border()
     m.fill(0, 26, 71, 30)                 # ground, top surface y=26
@@ -121,7 +121,7 @@ def level3():
     return m
 
 
-def level4():
+def incoming():
     # Flyers come in from the right, where the plate is. The run that becomes
     # your echo has to dodge (or stomp) them while holding it, and the echo
     # replays exactly that while you run left for the door.
@@ -142,7 +142,7 @@ def level4():
     return m
 
 
-def level5():
+def spring_loaded():
     # The plate is on a high ledge you can only reach with the spring. Flyers
     # cross at ledge height, so the run that becomes your echo dodges up there.
     m = Map(56, 23)
@@ -164,7 +164,7 @@ def level5():
     return m
 
 
-def level6():
+def crossfire():
     # Two plates, two doors, and flyers sweeping the floor. Your echo has to
     # hold A while you pass door A, then move to B while you wait between
     # the doors, dodging.
@@ -187,7 +187,7 @@ def level6():
     return m
 
 
-def level7():
+def last_bounce():
     # Finale: everything at once. Spring up to the plate and hold it through
     # the ledge flyers; then run the floor flyers, through the held door, and
     # bounce up to the exit.
@@ -237,13 +237,13 @@ def write(num, title, m):
 
 
 LEVELS = {
-    1: ("FIRST FALL", level1),
-    2: ("MEET YOUR ECHO", level2),
-    3: ("BOUNCE BACK", level3),
-    4: ("INCOMING", level4),
-    5: ("SPRING LOADED", level5),
-    6: ("CROSSFIRE", level6),
-    7: ("LAST BOUNCE", level7),
+    1: ("FIRST FALL", first_fall),
+    2: ("MEET YOUR ECHO", meet_your_echo),
+    3: ("SPRING LOADED", spring_loaded),
+    4: ("BOUNCE BACK", bounce_back),
+    5: ("INCOMING", incoming),
+    6: ("CROSSFIRE", crossfire),
+    7: ("LAST BOUNCE", last_bounce),
 }
 
 if __name__ == "__main__":

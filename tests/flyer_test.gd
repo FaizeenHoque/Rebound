@@ -1,5 +1,5 @@
 extends Node
-## Checks flyer rules on level 4.
+## Checks flyer rules on level 5 (Incoming).
 ## Run: godot --headless --path . --fixed-fps 60 res://tests/flyer_test.tscn
 ##   attempt 1: record flyer 0:0's position at tick 40, then rebound
 ##   attempt 2: same tick -> same position (the wave is identical); then stand
@@ -22,7 +22,7 @@ var stomp_at := -1
 func _ready() -> void:
 	Game.test_mode = true
 	process_physics_priority = -100
-	level = load("res://scenes/levels/level_4.tscn").instantiate()
+	level = load("res://scenes/levels/level_5.tscn").instantiate()
 	get_parent().add_child.call_deferred(level)
 
 

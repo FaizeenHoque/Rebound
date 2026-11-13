@@ -26,6 +26,13 @@ var SOLUTIONS := {
 		["playing"], ["dir", 1], ["x>=", 252], ["jump", 20],
 	],
 	3: [
+		# attempt 1: spring up to the ledge, hold the plate, hop the flyers
+		["playing"], ["dir", -1], ["x<=", 40], ["floor"], ["goto", 16],
+		["autododge", true], ["wait", 360], ["rebound"],
+		# attempt 2: hop the spikes and run through the held door
+		["playing"], ["dir", 1], ["x>=", 180], ["jump", 20], ["floor"],
+	],
+	4: [
 		# attempt 1: bounce up, hold plate A, then hold plate B
 		["playing"], ["dir", -1], ["x<=", 30], ["wait", 50], ["dir", 1],
 		["x>=", 158], ["dir", 0], ["wait", 180],
@@ -38,7 +45,7 @@ var SOLUTIONS := {
 		["x>=", 328], ["jump", 20], ["floor"],
 		["x>=", 392], ["open", 1],
 	],
-	4: [
+	5: [
 		# attempt 1: reach the plate, dodging flyers, then hold it while they keep coming
 		["playing"], ["dir", 1], ["flyer<=", 30], ["jump", 20], ["floor"],
 		["x>=", 268], ["dir", -1], ["x<=", 276], ["dir", 0],
@@ -47,13 +54,6 @@ var SOLUTIONS := {
 		["wait", 10], ["rebound"],
 		# attempt 2: run for the door while the echo holds the plate
 		["playing"], ["dir", -1], ["x<=", 84], ["open", 0],
-	],
-	5: [
-		# attempt 1: spring up to the ledge, hold the plate, hop the flyers
-		["playing"], ["dir", -1], ["x<=", 40], ["floor"], ["goto", 16],
-		["autododge", true], ["wait", 360], ["rebound"],
-		# attempt 2: hop the spikes and run through the held door
-		["playing"], ["dir", 1], ["x>=", 180], ["jump", 20], ["floor"],
 	],
 	6: [
 		# attempt 1: hold A, then B, hopping flyers the whole time
@@ -77,6 +77,10 @@ var SOLUTIONS := {
 var NEGATIVE := {
 	2: [["playing"], ["dir", 1], ["x>=", 252], ["jump", 20]],
 	3: [
+		["playing"], ["dir", -1], ["x<=", 40], ["floor"], ["goto", 16],
+		["autododge", true], ["wait", 60], ["dir", 1], ["x>=", 180], ["jump", 20], ["floor"],
+	],
+	4: [
 		["playing"], ["dir", -1], ["x<=", 30], ["wait", 50], ["dir", 1],
 		["x>=", 158], ["dir", 0], ["wait", 180], ["rebound"],
 		["playing"], ["dir", 1], ["x>=", 236], ["open", 0],
@@ -84,15 +88,11 @@ var NEGATIVE := {
 		["x>=", 328], ["jump", 20], ["floor"], ["x>=", 392],
 	],
 	# hold the plate, then run for the door alone: it shuts before you get there
-	4: [
+	5: [
 		["playing"], ["dir", 1], ["flyer<=", 30], ["jump", 20], ["floor"],
 		["x>=", 268], ["dir", 0], ["wait", 60], ["dir", -1],
 		["flyer<=", 30], ["jump", 20], ["floor"],
 		["flyer<=", 30], ["jump", 20], ["floor"], ["x<=", 20],
-	],
-	5: [
-		["playing"], ["dir", -1], ["x<=", 40], ["floor"], ["goto", 16],
-		["autododge", true], ["wait", 60], ["dir", 1], ["x>=", 180], ["jump", 20], ["floor"],
 	],
 	# hold A, then B, then run alone: door A is shut
 	6: [
