@@ -49,7 +49,7 @@ func setup(level_size: Vector2) -> void:
 	#motes.gravity = Vector2.ZERO
 	#motes.initial_velocity_min = 2.0
 	#motes.initial_velocity_max = 7.0
-	#
+	
 	#var grad := Gradient.new()
 	#grad.set_color(0, Color(0.133, 0.827, 0.933, 0.0))
 	#grad.add_point(0.3, Color(0.133, 0.827, 0.933, 0.45))
