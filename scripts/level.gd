@@ -44,6 +44,9 @@ const DEATH_TIME := 0.6
 const RESPAWN_TIME := 0.75
 const MIN_ECHO_TICKS := 15
 const MAX_RECORD_TICKS := 60 * 90
+const STOMP_VELOCITY := -260.0
+## How far (px) above a flyer's top the feet may have been last tick to count as a stomp.
+const STOMP_SLACK := 2.0
 
 enum Phase { RESPAWNING, PLAYING, DYING, COMPLETE }
 
@@ -147,6 +150,7 @@ func _physics_process(delta: float) -> void:
 				_update_flyers(tick)
 				tick += 1
 				_update_interactions()
+				_check_flyers()
 				_check_hazards()
 				_check_exit()
 		Phase.DYING:
@@ -323,6 +327,43 @@ func _update_flyers(t: int) -> void:
 		if f.position.x < -16.0:
 			f.queue_free()
 			flyers.erase(key)
+
+
+## Landing on a flyer bounces you and pops it; any other contact kills.
+## The echo pops flyers it stomped in its recording, so the wave stays in
+## step with the replay. Otherwise the echo passes through (it can't react).
+func _check_flyers() -> void:
+	if flyers.is_empty():
+		return
+	var i := tick - 1
+	var echo_stomping := false
+	if echo.active and echo.visible and i >= 1 and i < echo.positions.size():
+		echo_stomping = echo.positions[i].y > echo.positions[i - 1].y
+	for f: Flyer in flyers.values():
+		if f.popped:
+			continue
+		var top := f.hitbox().position.y
+		if echo_stomping and echo.hitbox().intersects(f.hitbox()) \
+				and echo.hitbox().end.y - (echo.positions[i].y - echo.positions[i - 1].y) <= top + STOMP_SLACK:
+			_pop_flyer(f, false)
+			continue
+		if player.state != Player.State.ACTIVE or not player.hitbox().intersects(f.hitbox()):
+			continue
+		var feet := player.hitbox().end.y
+		if player.velocity.y > 0.0 and feet - player.velocity.y / 60.0 <= top + STOMP_SLACK:
+			player.bounce(STOMP_VELOCITY)
+			_pop_flyer(f, true)
+		else:
+			_kill_player()
+			return
+
+
+func _pop_flyer(f: Flyer, by_player: bool) -> void:
+	f.pop()
+	Game.sfx("bounce", 0.0 if by_player else -10.0, 0.1)
+	if by_player:
+		camera.shake(1.5, 0.12)
+		_burst(f.position, Color("#22d3ee"), 8)
 
 
 func _clear_flyers() -> void:

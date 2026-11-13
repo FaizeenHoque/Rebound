@@ -142,8 +142,8 @@ func squash(s: Vector2) -> void:
 	visual.scale = s
 
 
-func bounce() -> void:
-	velocity.y = BOUNCE_VELOCITY
+func bounce(launch := BOUNCE_VELOCITY) -> void:
+	velocity.y = launch
 	_bounced = true
 	_coyote = 0
 	_buffer = 0
