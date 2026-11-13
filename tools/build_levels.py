@@ -187,6 +187,30 @@ def level6():
     return m
 
 
+def level7():
+    # Finale: everything at once. Spring up to the plate and hold it through
+    # the ledge flyers; then run the floor flyers, through the held door, and
+    # bounce up to the exit.
+    m = Map(48, 23)
+    m.border()
+    m.fill(0, 18, 47, 22)                 # floor, top surface y=18
+    m.put(4, 17, "oo")                    # spring up to the ledge
+    m.put(1, 9, "-" * 11)                 # one-way ledge
+    m.put(1, 8, "aa")                     # plate A on the ledge
+    m.put(16, 17, "P")
+    m.fill(28, 1, 28, 12)
+    m.put(28, 13, "A")                    # door A
+    m.put(33, 17, "oo")                   # spring up to the exit
+    m.fill(37, 10, 46, 17)                # exit block (top y=10)
+    m.put(42, 9, "E")
+    m.wave(8, 40, 200, 90)                # ledge-height lane
+    m.wave(17, 150, 240, 60)              # floor lane
+    m.hint(13, 4, "EVERYTHING YOU LEARNED")
+    m.hint(13, 5, "ALL AT ONCE")
+    m.hint(36, 4, "ONE LAST BOUNCE")
+    return m
+
+
 HEADER = """[gd_scene load_steps=2 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/levels/level_base.tscn" id="1_base"]
@@ -219,6 +243,7 @@ LEVELS = {
     4: ("INCOMING", level4),
     5: ("SPRING LOADED", level5),
     6: ("CROSSFIRE", level6),
+    7: ("LAST BOUNCE", level7),
 }
 
 if __name__ == "__main__":

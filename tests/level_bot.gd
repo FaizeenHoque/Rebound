@@ -62,6 +62,15 @@ var SOLUTIONS := {
 		# attempt 2: through A while the echo holds it, wait for B, out
 		["playing"], ["autododge", true], ["goto", 300], ["open", 1], ["dir", 1],
 	],
+	7: [
+		# attempt 1: spring up, hold the plate through the ledge flyers
+		["playing"], ["dir", -1], ["x<=", 40], ["floor"], ["goto", 16],
+		["autododge", true], ["wait", 420], ["rebound"],
+		# attempt 2: wait for a gap in the ledge-height flyers (they also cross
+		# the exit spring's path), then dodge the floor flyers, through the
+		# door and spring up to the exit
+		["playing"], ["autododge", true], ["tick>=", 30], ["dir", 1],
+	],
 }
 
 # Solo runs that must FAIL: proves doors block and the echo is required.
@@ -89,6 +98,10 @@ var NEGATIVE := {
 	6: [
 		["playing"], ["autododge", true], ["goto", 56], ["wait", 60],
 		["goto", 136], ["wait", 60], ["dir", 1],
+	],
+	7: [
+		["playing"], ["dir", -1], ["x<=", 40], ["floor"], ["goto", 16],
+		["autododge", true], ["wait", 60], ["dir", 1],
 	],
 }
 const NEGATIVE_LIMIT := 60 * 20
