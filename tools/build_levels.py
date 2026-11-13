@@ -133,8 +133,7 @@ def incoming():
     m.put(8, 13, "A")                     # door A, rows 13..17
     m.put(20, 17, "P")
     m.put(33, 17, "aa")                   # plate A, right in the flight path
-    m.wave(17, 0, 150, 70)                # low lane: standing height
-    m.wave(12, 75, 300, 45, 4)            # high lane: catches careless jumps
+    m.wave(17, 0, 210, 55)                # low lane only: the gentle flyer intro
     m.hint(12, 4, "THEY COME FROM THE RIGHT")
     m.hint(12, 5, "LAND ON THEM TO BOUNCE")
     m.hint(12, 8, "YOUR ECHO DODGES")
