@@ -202,7 +202,7 @@ def last_bounce():
     m.fill(37, 10, 46, 17)                # exit block (top y=10)
     m.put(42, 9, "E")
     m.wave(8, 40, 200, 90)                # ledge-height lane
-    m.wave(17, 150, 240, 60)              # floor lane
+    m.wave(17, 150, 220, 75)              # floor lane: the fastest in the game
     m.hint(13, 4, "EVERYTHING YOU LEARNED")
     m.hint(13, 5, "ALL AT ONCE")
     m.hint(36, 4, "ONE LAST BOUNCE")
