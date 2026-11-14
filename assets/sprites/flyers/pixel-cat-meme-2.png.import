@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ce842kj4okacc"
-path="res://.godot/imported/pumpgirl.png-64835c76bc24dd7accfbb7a94dad3b4e.ctex"
+uid="uid://d1vgm6o5jjjk8"
+path="res://.godot/imported/pixel-cat-meme-2.png-f3dc2dc2534c10194fa6e603cfbefc64.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/flyers/pumpgirl.png"
-dest_files=["res://.godot/imported/pumpgirl.png-64835c76bc24dd7accfbb7a94dad3b4e.ctex"]
+source_file="res://assets/sprites/flyers/pixel-cat-meme-2.png"
+dest_files=["res://.godot/imported/pixel-cat-meme-2.png-f3dc2dc2534c10194fa6e603cfbefc64.ctex"]
 
 [params]
 

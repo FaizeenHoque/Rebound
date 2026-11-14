@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bf5f17p02yxl3"
-path="res://.godot/imported/good_job.png-d524ba8229e7a08807e8ccc9e5a191fb.ctex"
+uid="uid://b4a5ach82xyib"
+path="res://.godot/imported/pixel-cat-meme-2.png-f6d8fde0363bc008cb267e07bc5aeb14.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/flyers/good_job.png"
-dest_files=["res://.godot/imported/good_job.png-d524ba8229e7a08807e8ccc9e5a191fb.ctex"]
+source_file="res://assets/sprites/Memes/pixel-cat-meme-2.png"
+dest_files=["res://.godot/imported/pixel-cat-meme-2.png-f6d8fde0363bc008cb267e07bc5aeb14.ctex"]
 
 [params]
 

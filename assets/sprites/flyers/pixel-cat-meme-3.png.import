@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://6lfxayj20spt"
-path="res://.godot/imported/dancing_penguin.png-d079f49fdc66897d5eee708509864799.ctex"
+uid="uid://dwowahnal03t0"
+path="res://.godot/imported/pixel-cat-meme-3.png-4a080f1293beb96baf3ed99912fec1c0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/flyers/dancing_penguin.png"
-dest_files=["res://.godot/imported/dancing_penguin.png-d079f49fdc66897d5eee708509864799.ctex"]
+source_file="res://assets/sprites/flyers/pixel-cat-meme-3.png"
+dest_files=["res://.godot/imported/pixel-cat-meme-3.png-4a080f1293beb96baf3ed99912fec1c0.ctex"]
 
 [params]
 

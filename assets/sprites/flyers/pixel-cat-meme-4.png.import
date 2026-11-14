@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cwo2ccibfxq3y"
-path="res://.godot/imported/waving.png-d6665241492502e6f6b6dc03df8c0f57.ctex"
+uid="uid://b4fqf6hiwir1g"
+path="res://.godot/imported/pixel-cat-meme-4.png-58fff0911a3eec7b19563d08285961ea.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/flyers/waving.png"
-dest_files=["res://.godot/imported/waving.png-d6665241492502e6f6b6dc03df8c0f57.ctex"]
+source_file="res://assets/sprites/flyers/pixel-cat-meme-4.png"
+dest_files=["res://.godot/imported/pixel-cat-meme-4.png-58fff0911a3eec7b19563d08285961ea.ctex"]
 
 [params]
 

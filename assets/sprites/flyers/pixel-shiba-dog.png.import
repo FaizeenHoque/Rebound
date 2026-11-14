@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ccygcf7nhssng"
-path="res://.godot/imported/brb.png-56676219bff2b6d59ff5d75f06a0c97f.ctex"
+uid="uid://bku2aesfemp3g"
+path="res://.godot/imported/pixel-shiba-dog.png-bff4e0e767564ce933cc1c28db8bfd82.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/flyers/brb.png"
-dest_files=["res://.godot/imported/brb.png-56676219bff2b6d59ff5d75f06a0c97f.ctex"]
+source_file="res://assets/sprites/flyers/pixel-shiba-dog.png"
+dest_files=["res://.godot/imported/pixel-shiba-dog.png-bff4e0e767564ce933cc1c28db8bfd82.ctex"]
 
 [params]
 

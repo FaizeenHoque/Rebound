@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c8jewtuspahjv"
-path="res://.godot/imported/hipster_oversized_glasses.png-c123ab54c44b0948906211fb7347de6b.ctex"
+uid="uid://c1j36yvx3bn7t"
+path="res://.godot/imported/pixel-cat-meme-5.png-eaeb6630e368bad29f836657fd52caf3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/flyers/hipster_oversized_glasses.png"
-dest_files=["res://.godot/imported/hipster_oversized_glasses.png-c123ab54c44b0948906211fb7347de6b.ctex"]
+source_file="res://assets/sprites/flyers/pixel-cat-meme-5.png"
+dest_files=["res://.godot/imported/pixel-cat-meme-5.png-eaeb6630e368bad29f836657fd52caf3.ctex"]
 
 [params]
 

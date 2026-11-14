@@ -3,19 +3,17 @@ extends Node2D
 ## A flying enemy that crosses the level from right to left.
 ## Its position is a pure function of the level's attempt tick, so every
 ## attempt (and every echo replay) sees exactly the same wave.
-## Each flyer wears an emoji skin: a horizontal strip of 16x16 frames.
+## Each flyer wears a meme skin (16x16 frames, from assets/sprites/Memes).
 ## The skin is picked from the flyer's place in the wave, so it looks random
 ## but is the same on every attempt.
 
 const SKINS: Array[Texture2D] = [
-	preload("res://assets/sprites/flyers/brb.png"),
-	preload("res://assets/sprites/flyers/dancing_penguin.png"),
-	preload("res://assets/sprites/flyers/good_job.png"),
-	preload("res://assets/sprites/flyers/growler.png"),
-	preload("res://assets/sprites/flyers/hipster_oversized_glasses.png"),
-	preload("res://assets/sprites/flyers/pumpgirl.png"),
-	preload("res://assets/sprites/flyers/spinner.png"),
-	preload("res://assets/sprites/flyers/waving.png"),
+	preload("res://assets/sprites/flyers/pixel-cat-meme-1.png"),
+	preload("res://assets/sprites/flyers/pixel-cat-meme-2.png"),
+	preload("res://assets/sprites/flyers/pixel-cat-meme-3.png"),
+	preload("res://assets/sprites/flyers/pixel-cat-meme-4.png"),
+	preload("res://assets/sprites/flyers/pixel-cat-meme-5.png"),
+	preload("res://assets/sprites/flyers/pixel-shiba-dog.png"),
 ]
 const FRAME := 16
 const FRAME_TICKS := 8

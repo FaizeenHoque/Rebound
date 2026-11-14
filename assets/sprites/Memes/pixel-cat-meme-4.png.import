@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cq840ah6y6iod"
-path="res://.godot/imported/spinner.png-38d5cbaa2ef544b8de710aac23d74e2c.ctex"
+uid="uid://dmfbm644q5yk1"
+path="res://.godot/imported/pixel-cat-meme-4.png-c4a654d28de0d3c2ce9a0f99b76784a1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/flyers/spinner.png"
-dest_files=["res://.godot/imported/spinner.png-38d5cbaa2ef544b8de710aac23d74e2c.ctex"]
+source_file="res://assets/sprites/Memes/pixel-cat-meme-4.png"
+dest_files=["res://.godot/imported/pixel-cat-meme-4.png-c4a654d28de0d3c2ce9a0f99b76784a1.ctex"]
 
 [params]
 

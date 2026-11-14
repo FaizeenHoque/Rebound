@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://vtylxokegpsj"
-path="res://.godot/imported/growler.png-4fa0a9011f44a70f4addb27d34f55005.ctex"
+uid="uid://phyvcy07xi0j"
+path="res://.godot/imported/pixel-shiba-dog.png-08a5d9305ddb0d9f27eb2483c9410561.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/flyers/growler.png"
-dest_files=["res://.godot/imported/growler.png-4fa0a9011f44a70f4addb27d34f55005.ctex"]
+source_file="res://assets/sprites/Memes/pixel-shiba-dog.png"
+dest_files=["res://.godot/imported/pixel-shiba-dog.png-08a5d9305ddb0d9f27eb2483c9410561.ctex"]
 
 [params]
 
