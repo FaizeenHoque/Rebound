@@ -62,11 +62,11 @@ def first_fall():
     m.hint(2, 11, "A/D OR ARROWS: MOVE")
     m.hint(18, 11, "SPACE: JUMP")
     m.hint(22, 12, "POINTY = OUCHIE")
-    m.hint(31, 9, "FALLING IS NOT THE END")
-    m.hint(31, 10, "YOU ALWAYS BOUNCE BACK")
+    m.hint(31, 9, "FALLING IS NOT THE END (TRUST)")
+    m.hint(31, 10, "YOU ALWAYS BOUNCE BACK, BESTIE")
     m.hint(56, 7, "THE WAY UP")
-    m.hint(56, 8, "IS DOWN")
-    m.hint(72, 5, "THE EXIT")
+    m.hint(56, 8, "IS DOWN (BIG BRAIN)")
+    m.hint(72, 5, "THE EXIT (REAL)")
     return m
 
 
@@ -84,9 +84,9 @@ def meet_your_echo():
     m.hint(3, 10, "PLATES OPEN DOORS")
     m.hint(3, 11, "BUT ONLY WHILE HELD")
     m.hint(19, 8, "R: REBOUND (FAIL ON PURPOSE)")
-    m.hint(19, 9, "YOUR ECHO REPEATS YOU")
+    m.hint(19, 9, "YOUR ECHO COPIES YOUR HOMEWORK")
     m.hint(36, 6, "TOO FAR TO DO ALONE...")
-    m.hint(36, 7, "BUT YOU ARE NOT ALONE")
+    m.hint(36, 7, "BRO NEEDS A HOMIE")
     return m
 
 
@@ -115,9 +115,9 @@ def bounce_back():
     m.put(67, 15, "E")
     m.hint(5, 20, "ONE ECHO.")
     m.hint(5, 21, "TWO DOORS.")
-    m.hint(19, 12, "PLAN YOUR FAILURE")
+    m.hint(19, 12, "PLAN YOUR FAILURE. BIG BRAIN")
     m.hint(19, 13, "HOLD A... THEN HOLD B")
-    m.hint(53, 11, "ALMOST OUT")
+    m.hint(53, 11, "ALMOST OUT. COPIUM")
     return m
 
 
@@ -134,8 +134,8 @@ def incoming():
     m.put(20, 17, "P")
     m.put(33, 17, "aa")                   # plate A, right in the flight path
     m.wave(17, 0, 210, 55)                # low lane only: the gentle flyer intro
-    m.hint(12, 4, "THEY COME FROM THE RIGHT")
-    m.hint(12, 5, "LAND ON THEM TO BOUNCE")
+    m.hint(12, 4, "CATS INCOMING FROM THE RIGHT")
+    m.hint(12, 5, "BONK THEM: LAND ON TOP")
     m.hint(12, 8, "YOUR ECHO DODGES")
     m.hint(12, 9, "WHAT YOU DODGED")
     return m
@@ -155,10 +155,10 @@ def spring_loaded():
     m.fill(40, 1, 40, 12)                 # wall above the door
     m.put(40, 13, "A")                    # door A, rows 13..17
     m.put(50, 17, "E")
-    m.hint(13, 4, "UP IS THE WAY")
+    m.hint(13, 4, "UP IS THE WAY (NO CAP)")
     m.hint(13, 5, "TO HOLD THE DOOR")
     m.hint(29, 10, "STILL TOO FAR?")
-    m.hint(29, 11, "GOOD. YOU KNOW WHAT TO DO")
+    m.hint(29, 11, "GOOD. YOU KNOW THE DRILL")
     return m
 
 
@@ -179,9 +179,9 @@ def crossfire():
     m.put(46, 17, "E")
     m.wave(17, 30, 160, 70)               # low lane
     m.hint(5, 8, "HOLD A. THEN HOLD B.")
-    m.hint(5, 9, "DON'T STOP DODGING.")
+    m.hint(5, 9, "DODGE OR GET BONKED.")
     m.hint(21, 4, "ONE ECHO. TWO DOORS.")
-    m.hint(21, 5, "INCOMING FIRE.")
+    m.hint(21, 5, "INCOMING CATS.")
     return m
 
 
@@ -204,8 +204,8 @@ def last_bounce():
     m.wave(8, 40, 200, 90)                # ledge-height lane
     m.wave(17, 150, 220, 75)              # floor lane: the fastest in the game
     m.hint(13, 4, "EVERYTHING YOU LEARNED")
-    m.hint(13, 5, "ALL AT ONCE")
-    m.hint(36, 4, "ONE LAST BOUNCE")
+    m.hint(13, 5, "ALL AT ONCE. NO PRESSURE")
+    m.hint(36, 4, "ONE LAST BOUNCE. SEND IT")
     return m
 
 

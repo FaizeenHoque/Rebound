@@ -128,6 +128,7 @@ func _ready() -> void:
 	_build_terrain()
 	_spawn_objects()
 	_spawn_hints()
+	_spawn_billboards()
 	_parse_waves()
 	_respawn_pad = PAD_SCENE.instantiate()
 	_respawn_pad.position = start_pos - Vector2(8, 0)
@@ -688,6 +689,74 @@ func _spawn_objects() -> void:
 					objects.add_child(door)
 					doors.append(door)
 			x += 1
+
+
+## Meme signs floating in the background: up to 3 per level, in 6x6-tile
+## areas of empty space away from gameplay objects and hint text.
+## Deterministic per level.
+func _spawn_billboards() -> void:
+	const W := 6
+	const H := 6
+	const MARGIN := 2  # columns kept clear beside gameplay objects
+	const SPACING := 16
+	var busy := {}   # gameplay object cells (kept MARGIN columns away)
+	var text := {}   # hint text cells (just mustn't overlap)
+	for y in map_h:
+		for x in map_w:
+			var c := cell(x, y)
+			if c != "." and c != "#":
+				busy[Vector2i(x, y)] = true
+				if c == "A" or c == "B":  # doors extend down to the floor
+					var dy := 1
+					while y + dy < map_h and not is_solid(x, y + dy):
+						busy[Vector2i(x, y + dy)] = true
+						dy += 1
+	for h in hints:
+		var parts := h.split("|", true, 1)
+		if parts.size() < 2:
+			continue
+		var xy := parts[0].split(",")
+		var hx := int(xy[0])
+		var hy := int(xy[1])
+		for dx in ceili(parts[1].length() * 6.0 / TILE) + 1:
+			text[Vector2i(hx + dx, hy)] = true
+	var rng := RandomNumberGenerator.new()
+	rng.seed = level_number * 104729
+	var placed := 0
+	var last_x := -SPACING
+	for x in range(1, map_w - W - 1):
+		if placed >= 3:
+			break
+		if x - last_x < SPACING:
+			continue
+		for ground in range(map_h - 1, H, -1):  # lowest spot first
+			if not _billboard_fits(x, ground, W, H, MARGIN, busy, text):
+				continue
+			var b := Billboard.new()
+			b.setup(Hud.MEMES[rng.randi() % Hud.MEMES.size()],
+				Billboard.CAPTIONS[rng.randi() % Billboard.CAPTIONS.size()])
+			b.position = Vector2(x * TILE, ground * TILE)
+			add_child(b)
+			placed += 1
+			last_x = x
+			break
+
+
+## True if a W x H sign can float at column x with its bottom edge on row
+## `ground` (it occupies the H rows above) without touching terrain or busy cells.
+func _billboard_fits(x: int, ground: int, w: int, h: int, margin: int, busy: Dictionary, text: Dictionary) -> bool:
+	for dx in w:
+		for dy in range(1, h + 1):
+			if cell(x + dx, ground - dy) != ".":
+				return false
+		for dy in range(0, h + 2):  # keep a row clear above and below hint text
+			if text.has(Vector2i(x + dx, ground - dy)):
+				return false
+	for dx in range(-margin, w + margin):
+		for dy in range(1, h + 1):
+			if busy.has(Vector2i(x + dx, ground - dy)):
+				return false
+	return true
 
 
 func _spawn_hints() -> void:

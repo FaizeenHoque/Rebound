@@ -28,4 +28,4 @@ map = "############################################################
 ############################################################
 ############################################################
 ############################################################"
-hints = PackedStringArray("3,10|PLATES OPEN DOORS", "3,11|BUT ONLY WHILE HELD", "19,8|R: REBOUND (FAIL ON PURPOSE)", "19,9|YOUR ECHO REPEATS YOU", "36,6|TOO FAR TO DO ALONE...", "36,7|BUT YOU ARE NOT ALONE")
+hints = PackedStringArray("3,10|PLATES OPEN DOORS", "3,11|BUT ONLY WHILE HELD", "19,8|R: REBOUND (FAIL ON PURPOSE)", "19,9|YOUR ECHO COPIES YOUR HOMEWORK", "36,6|TOO FAR TO DO ALONE...", "36,7|BRO NEEDS A HOMIE")

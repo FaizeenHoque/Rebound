@@ -28,4 +28,4 @@ map = "########################################################
 ########################################################
 ########################################################
 ########################################################"
-hints = PackedStringArray("13,4|UP IS THE WAY", "13,5|TO HOLD THE DOOR", "29,10|STILL TOO FAR?", "29,11|GOOD. YOU KNOW WHAT TO DO")
+hints = PackedStringArray("13,4|UP IS THE WAY (NO CAP)", "13,5|TO HOLD THE DOOR", "29,10|STILL TOO FAR?", "29,11|GOOD. YOU KNOW THE DRILL")

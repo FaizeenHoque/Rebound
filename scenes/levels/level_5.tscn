@@ -28,5 +28,5 @@ map = "########################################
 ########################################
 ########################################
 ########################################"
-hints = PackedStringArray("12,4|THEY COME FROM THE RIGHT", "12,5|LAND ON THEM TO BOUNCE", "12,8|YOUR ECHO DODGES", "12,9|WHAT YOU DODGED")
+hints = PackedStringArray("12,4|CATS INCOMING FROM THE RIGHT", "12,5|BONK THEM: LAND ON TOP", "12,8|YOUR ECHO DODGES", "12,9|WHAT YOU DODGED")
 waves = PackedStringArray("17|0|210|55|0")
