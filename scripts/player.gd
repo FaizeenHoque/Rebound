@@ -223,7 +223,7 @@ func _spawn_afterimage() -> void:
 	ghost.frame = sprite.frame
 	ghost.flip_h = sprite.flip_h
 	ghost.position = position + sprite.position
-	ghost.modulate = Color(0.13, 0.83, 0.93, 0.4)
+	ghost.modulate = Color(0, 0, 0, 0.4)  # silhouette trail, like the robot
 	fx_parent.add_child(ghost)
 	var tw := ghost.create_tween()
 	tw.tween_property(ghost, "modulate:a", 0.0, 0.22)

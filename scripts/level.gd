@@ -575,6 +575,7 @@ func _maybe_decor(x: int, y: int, mask: int, rng: RandomNumberGenerator) -> void
 	if tall_free and rng.randf() < 0.035:
 		var tree := Sprite2D.new()
 		tree.texture = TREES_TEX
+		tree.modulate = TileLayer.SILHOUETTE
 		tree.hframes = 2
 		tree.frame = rng.randi_range(0, 1)
 		tree.centered = false
@@ -600,6 +601,7 @@ func _add_decor(idx: int, at: Vector2, animated: bool) -> void:
 	s.centered = false
 	s.position = at
 	s.z_index = -1
+	s.modulate = TileLayer.SILHOUETTE
 	if animated:
 		s.set_meta("anim", true)
 	terrain.add_child(s)

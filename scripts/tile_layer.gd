@@ -1,8 +1,11 @@
 class_name TileLayer
 extends Node2D
 ## Draws the level's tiles in a single cached draw pass.
+## Solid ground and platforms are drawn as black silhouettes; animated tiles
+## (spikes) keep their colours so hazards stay readable.
 
 const TEX := preload("res://assets/tilesets/tiles.png")
+const SILHOUETTE := Color.BLACK
 
 var _tiles: Array = []       # [src: Rect2, dst: Vector2]
 var _anim_tiles: Array = []  # [src_a: Rect2, src_b: Rect2, dst: Vector2]
@@ -26,6 +29,6 @@ func toggle_anim() -> void:
 
 func _draw() -> void:
 	for t in _tiles:
-		draw_texture_rect_region(TEX, Rect2(t[1], Vector2(8, 8)), t[0])
+		draw_texture_rect_region(TEX, Rect2(t[1], Vector2(8, 8)), t[0], SILHOUETTE)
 	for t in _anim_tiles:
 		draw_texture_rect_region(TEX, Rect2(t[2], Vector2(8, 8)), t[_frame])
