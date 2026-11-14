@@ -84,18 +84,14 @@ horizontal_alignment = 1
 [node name="Buttons" type="VBoxContainer" parent="." unique_id=1103027857]
 layout_mode = 0
 offset_left = 130.0
-offset_top = 82.0
+offset_top = 86.0
 offset_right = 190.0
-offset_bottom = 132.0
+offset_bottom = 120.0
 theme_override_constants/separation = 4
 
 [node name="Play" type="Button" parent="Buttons" unique_id=880820718]
 layout_mode = 2
 text = "PLAY"
-
-[node name="Levels" type="Button" parent="Buttons"]
-layout_mode = 2
-text = "LEVELS"
 
 [node name="Quit" type="Button" parent="Buttons" unique_id=1135135959]
 layout_mode = 2

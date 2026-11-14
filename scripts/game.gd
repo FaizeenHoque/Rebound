@@ -14,12 +14,6 @@ const LEVELS := [
 const MAIN_MENU := "res://scenes/ui/main_menu.tscn"
 const END_SCREEN := "res://scenes/ui/end_screen.tscn"
 const INTRO := "res://scenes/ui/intro.tscn"
-const LEVEL_SELECT := "res://scenes/ui/level_select.tscn"
-const PROGRESS_FILE := "user://progress.cfg"
-## Level order of the first progress format, which saved positions instead of
-## names. Only used to convert those saves.
-const LEGACY_ORDER := ["FIRST FALL", "MEET YOUR ECHO", "BOUNCE BACK", "INCOMING",
-	"SPRING LOADED", "CROSSFIRE", "LAST BOUNCE"]
 ## Meme sound slots -> number of clips (assets/audio/meme/<slot>_<i>.ogg,
 ## produced by tools/fetch_meme_sfx.py). Pools pick randomly, never twice in a row.
 const SFX := {
@@ -35,11 +29,6 @@ const VOICE_SLOTS := ["death", "rebound", "echo", "complete", "plate_on", "plate
 var test_mode := false
 var current_level := 0
 var failures := 0
-## Titles of levels the player has finished at least once (saved to disk).
-## Keyed by title, not position, so reordering levels never shifts them.
-var cleared := {}
-## Tests turn this off so they never touch the player's save file.
-var persist := true
 
 var _sfx := {}         # slot -> Array[AudioStream]
 var _last_pick := {}   # slot -> index of the clip played last time
@@ -58,7 +47,6 @@ func _ready() -> void:
 	# Quit through quit_game() so audio is released cleanly (no leak errors).
 	get_tree().auto_accept_quit = false
 	_setup_input()
-	_load_progress()
 	for slot in SFX:
 		var clips: Array[AudioStream] = []
 		for i in SFX[slot]:
@@ -197,12 +185,6 @@ func start_game() -> void:
 	change_scene(INTRO)
 
 
-## Starts a single level from the level select.
-func start_level(index: int) -> void:
-	failures = 0
-	go_to_level(index)
-
-
 func go_to_level(index: int) -> void:
 	current_level = index
 	change_scene(LEVELS[index])
@@ -219,51 +201,10 @@ func to_main_menu() -> void:
 func level_completed() -> void:
 	if test_mode:
 		return
-	cleared[level_title(current_level)] = true
-	_save_progress()
 	if current_level + 1 < LEVELS.size():
 		go_to_level(current_level + 1)
 	else:
 		change_scene(END_SCREEN)
-
-
-func to_level_select() -> void:
-	change_scene(LEVEL_SELECT)
-
-
-func is_cleared(index: int) -> bool:
-	return cleared.has(level_title(index))
-
-
-## A level's title, read from its scene so it can't drift out of sync.
-## (Instancing is cheap: levels only build themselves on entering the tree.)
-func level_title(index: int) -> String:
-	var lvl := (load(LEVELS[index]) as PackedScene).instantiate()
-	var t: String = lvl.level_title
-	lvl.free()
-	return t
-
-
-func _load_progress() -> void:
-	var cfg := ConfigFile.new()
-	if cfg.load(PROGRESS_FILE) != OK:
-		return
-	for t in cfg.get_value("progress", "cleared_levels", []):
-		cleared[str(t)] = true
-	# convert the old position-based format once
-	if cfg.has_section_key("progress", "cleared"):
-		for i in cfg.get_value("progress", "cleared", []):
-			if int(i) >= 0 and int(i) < LEGACY_ORDER.size():
-				cleared[LEGACY_ORDER[int(i)]] = true
-		_save_progress()
-
-
-func _save_progress() -> void:
-	if not persist:
-		return
-	var cfg := ConfigFile.new()
-	cfg.set_value("progress", "cleared_levels", cleared.keys())
-	cfg.save(PROGRESS_FILE)
 
 
 func is_transitioning() -> bool:
