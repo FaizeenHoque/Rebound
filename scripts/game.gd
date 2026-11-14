@@ -19,10 +19,13 @@ const SFX := {
 	"jump": 1, "land": 1, "death": 6, "rebound": 1, "echo": 1,
 	"plate_on": 1, "plate_off": 1, "door_open": 1, "door_close": 1,
 	"bounce": 1, "complete": 2, "respawn": 1, "select": 1,
+	"flyer_chatter": 7, "flyer_pop": 4, "flyer_kill": 5,
 }
 ## Voice lines share one channel so they never talk over each other: a new
 ## line waits for the current one (at most one waits; extras are dropped).
-const VOICE_SLOTS := ["death", "rebound", "echo", "complete", "plate_on", "plate_off", "door_open", "door_close"]
+const VOICE_SLOTS := ["death", "rebound", "echo", "complete", "plate_on", "plate_off", "door_open", "door_close", "flyer_kill"]
+## Lines that always take the waiting spot (replacing whatever was queued).
+const PRIORITY_LINES := ["flyer_kill"]
 
 ## Set by the automated test runner: disables scene transitions on completion.
 var test_mode := false
@@ -90,6 +93,10 @@ func _release_audio() -> void:
 		if p:
 			p.stop()
 			p.stream = null
+	# players owned by scene nodes (e.g. flyer chatter)
+	for p in get_tree().get_nodes_in_group("sfx_players"):
+		p.stop()
+		p.stream = null
 
 
 # ------------------------------------------------------------------ input
@@ -130,7 +137,7 @@ func sfx(sfx_name: String, volume_db := 0.0, pitch_jitter := 0.05) -> void:
 		return
 	if sfx_name in VOICE_SLOTS:
 		if _voice_line.playing:
-			if _queued_line.is_empty():
+			if _queued_line.is_empty() or sfx_name in PRIORITY_LINES:
 				_queued_line = [sfx_name, volume_db]
 			return
 		_play_line(sfx_name, volume_db)
@@ -141,6 +148,12 @@ func sfx(sfx_name: String, volume_db := 0.0, pitch_jitter := 0.05) -> void:
 	p.volume_db = volume_db - 4.0
 	p.pitch_scale = 1.0 + randf_range(-pitch_jitter, pitch_jitter)
 	p.play()
+
+
+## A clip from a slot's pool, for nodes that play sounds on their own player
+## (e.g. flyers, whose chatter is positional).
+func pick(slot: String) -> AudioStream:
+	return _pick(slot) if _sfx.has(slot) else null
 
 
 ## Random clip from a slot's pool, avoiding an immediate repeat.

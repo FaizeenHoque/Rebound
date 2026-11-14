@@ -15,6 +15,9 @@ const SKINS: Array[Texture2D] = [
 	preload("res://assets/sprites/flyers/pixel-cat-meme-5.png"),
 	preload("res://assets/sprites/flyers/pixel-shiba-dog.png"),
 ]
+## Ticks between chatter clips (each flyer picks a new gap every time).
+const CHATTER_MIN := 45
+const CHATTER_MAX := 110
 const FRAME := 16
 const FRAME_TICKS := 8
 ## Hitbox relative to the centre.
@@ -26,12 +29,15 @@ var speed := 40.0
 var bob := 0.0
 var popped := false
 var skin := 0
+var _next_chatter := 0
 
 @onready var sprite: Sprite2D = $Sprite
 @onready var burst: CPUParticles2D = $Burst
+@onready var voice: AudioStreamPlayer2D = $Voice
 
 
 func _ready() -> void:
+	voice.add_to_group("sfx_players")  # so Game can release it on quit
 	sprite.texture = SKINS[skin % SKINS.size()]
 	sprite.hframes = maxi(1, sprite.texture.get_width() / FRAME)
 
@@ -53,6 +59,12 @@ func pos_at(tick: int) -> Vector2:
 
 func place(tick: int) -> void:
 	position = pos_at(tick)
+	# meme chatter the whole way across (cosmetic only, so randomness is fine)
+	if tick - spawn_tick >= _next_chatter:
+		_next_chatter = tick - spawn_tick + randi_range(CHATTER_MIN, CHATTER_MAX)
+		voice.stream = Game.pick("flyer_chatter")
+		voice.pitch_scale = randf_range(0.8, 1.45)
+		voice.play()
 	if sprite.hframes > 1:
 		sprite.frame = ((tick - spawn_tick) / FRAME_TICKS) % sprite.hframes
 
@@ -64,6 +76,7 @@ func hitbox() -> Rect2:
 func pop() -> void:
 	popped = true
 	sprite.visible = false
+	voice.stop()
 	burst.restart()
 	burst.emitting = true
 	# The level frees it at the next attempt; it stays in the wave's

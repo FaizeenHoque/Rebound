@@ -247,7 +247,7 @@ func _record() -> void:
 	_rec_code.append(player.anim_code())
 
 
-func _kill_player(voluntary := false) -> void:
+func _kill_player(voluntary := false, by_flyer := false) -> void:
 	if phase != Phase.PLAYING:
 		return
 	phase = Phase.DYING
@@ -262,6 +262,8 @@ func _kill_player(voluntary := false) -> void:
 	_leave_fail_mark(player.position)
 	player.die()
 	Game.sfx("rebound" if voluntary else "death")
+	if by_flyer:
+		Game.sfx("flyer_kill")  # queued after the death clip: "skill issue"
 	camera.shake(4.0, 0.3)
 	_screen_glitch(1.0, Color("#f472b6"), 0.55)
 	_burst(player.position + Vector2(0, -7), Color("#f472b6"), 14)
@@ -354,13 +356,14 @@ func _check_flyers() -> void:
 			player.bounce(STOMP_VELOCITY)
 			_pop_flyer(f, true)
 		else:
-			_kill_player()
+			_kill_player(false, true)
 			return
 
 
 func _pop_flyer(f: Flyer, by_player: bool) -> void:
 	f.pop()
 	Game.sfx("bounce", 0.0 if by_player else -10.0, 0.1)
+	Game.sfx("flyer_pop", 2.0 if by_player else -8.0, 0.12)
 	if by_player:
 		camera.shake(1.5, 0.12)
 		_burst(f.position, Color("#22d3ee"), 8)

@@ -45,6 +45,9 @@ func _physics_process(_delta: float) -> void:
 		1:
 			if playing and level.tick == SAMPLE_TICK:
 				sample = level.flyers["0:0"].position
+				var v: AudioStreamPlayer2D = level.flyers["0:0"].voice
+				_check(v.stream != null and v.stream.resource_path.contains("flyer_chatter"),
+					"flyers chatter while flying (%s)" % (v.stream.resource_path.get_file() if v.stream else "none"))
 			elif playing and level.tick == SAMPLE_TICK + 20:
 				rebound = true
 		2:
@@ -55,6 +58,8 @@ func _physics_process(_delta: float) -> void:
 				set_meta("died", true)
 				_check(level.tick > SAMPLE_TICK and level.player.state == Player.State.DEAD,
 					"standing in the low lane gets you killed (tick %d)" % level.tick)
+				_check(Game._queued_line.size() > 0 and Game._queued_line[0] == "flyer_kill",
+					"a flyer kill queues a flyer_kill line (%s)" % [Game._queued_line])
 		3:
 			if playing and level.tick == STOMP_TICK:
 				var f: Flyer = level.flyers["0:0"]
@@ -86,5 +91,5 @@ func _physics_process(_delta: float) -> void:
 func _finish() -> void:
 	for r in results:
 		print(r)
-	print("FLYER TEST PASSED" if ok and results.size() == 5 else "FLYER TEST FAILED")
-	get_tree().quit(0 if ok and results.size() == 5 else 1)
+	print("FLYER TEST PASSED" if ok and results.size() == 7 else "FLYER TEST FAILED")
+	get_tree().quit(0 if ok and results.size() == 7 else 1)
