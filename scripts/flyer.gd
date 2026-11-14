@@ -3,8 +3,20 @@ extends Node2D
 ## A flying enemy that crosses the level from right to left.
 ## Its position is a pure function of the level's attempt tick, so every
 ## attempt (and every echo replay) sees exactly the same wave.
-## Sprite sheet: horizontal strip of 16x16 frames, facing left.
+## Each flyer wears an emoji skin: a horizontal strip of 16x16 frames.
+## The skin is picked from the flyer's place in the wave, so it looks random
+## but is the same on every attempt.
 
+const SKINS: Array[Texture2D] = [
+	preload("res://assets/sprites/flyers/brb.png"),
+	preload("res://assets/sprites/flyers/dancing_penguin.png"),
+	preload("res://assets/sprites/flyers/good_job.png"),
+	preload("res://assets/sprites/flyers/growler.png"),
+	preload("res://assets/sprites/flyers/hipster_oversized_glasses.png"),
+	preload("res://assets/sprites/flyers/pumpgirl.png"),
+	preload("res://assets/sprites/flyers/spinner.png"),
+	preload("res://assets/sprites/flyers/waving.png"),
+]
 const FRAME := 16
 const FRAME_TICKS := 8
 ## Hitbox relative to the centre.
@@ -15,21 +27,24 @@ var start := Vector2.ZERO
 var speed := 40.0
 var bob := 0.0
 var popped := false
+var skin := 0
 
 @onready var sprite: Sprite2D = $Sprite
 @onready var burst: CPUParticles2D = $Burst
 
 
 func _ready() -> void:
-	if sprite.texture:
-		sprite.hframes = maxi(1, sprite.texture.get_width() / FRAME)
+	sprite.texture = SKINS[skin % SKINS.size()]
+	sprite.hframes = maxi(1, sprite.texture.get_width() / FRAME)
 
 
-func setup(p_spawn_tick: int, p_start: Vector2, p_speed: float, p_bob: float) -> void:
+## `id` identifies the flyer within its level's waves (e.g. "0:3").
+func setup(p_spawn_tick: int, p_start: Vector2, p_speed: float, p_bob: float, id := "") -> void:
 	spawn_tick = p_spawn_tick
 	start = p_start
 	speed = p_speed
 	bob = p_bob
+	skin = absi(hash(id))
 
 
 ## Position at a given level tick.

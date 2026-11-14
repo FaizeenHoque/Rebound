@@ -316,7 +316,7 @@ func _update_flyers(t: int) -> void:
 			var key := "%d:%d" % [w, since / wave.interval]
 			if not flyers.has(key):
 				var f: Flyer = FLYER_SCENE.instantiate()
-				f.setup(t, Vector2(map_w * TILE + 8, wave.y), wave.speed, wave.bob)
+				f.setup(t, Vector2(map_w * TILE + 8, wave.y), wave.speed, wave.bob, key)
 				objects.add_child(f)
 				flyers[key] = f
 	for key in flyers.keys():
