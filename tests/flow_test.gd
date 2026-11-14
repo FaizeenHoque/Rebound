@@ -1,5 +1,5 @@
 extends Node
-## Checks menu -> intro -> (skip) -> level 1 -> restart flow and the ending.
+## Checks menu -> level 1 -> restart flow and the ending.
 
 
 func _ready() -> void:
@@ -13,15 +13,7 @@ func _ready() -> void:
 	Game.start_game()
 	await get_tree().create_timer(1.2).timeout
 	var s := get_tree().current_scene
-	print("after PLAY: ", s.name)
-	var ev := InputEventKey.new()
-	ev.physical_keycode = KEY_SPACE
-	ev.keycode = KEY_SPACE
-	ev.pressed = true
-	Input.parse_input_event(ev)
-	await get_tree().create_timer(1.2).timeout
-	s = get_tree().current_scene
-	print("after skip: ", s.name, " attempt=", s.get("attempt"))
+	print("after PLAY: ", s.name, " attempt=", s.get("attempt"))
 	Game.restart_level()
 	await get_tree().create_timer(1.2).timeout
 	s = get_tree().current_scene

@@ -13,7 +13,6 @@ const LEVELS := [
 ]
 const MAIN_MENU := "res://scenes/ui/main_menu.tscn"
 const END_SCREEN := "res://scenes/ui/end_screen.tscn"
-const INTRO := "res://scenes/ui/intro.tscn"
 ## Meme sound slots -> number of clips (assets/audio/meme/<slot>_<i>.ogg,
 ## produced by tools/fetch_meme_sfx.py). Pools pick randomly, never twice in a row.
 const SFX := {
@@ -181,8 +180,7 @@ func _setup_music() -> void:
 
 func start_game() -> void:
 	failures = 0
-	current_level = 0
-	change_scene(INTRO)
+	go_to_level(0)
 
 
 func go_to_level(index: int) -> void:
