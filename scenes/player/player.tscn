@@ -13,6 +13,8 @@ shader = ExtResource("3_flash")
 shader_parameter/flash = 0.0
 shader_parameter/flash_color = Color(1, 1, 1, 1)
 shader_parameter/base_tint = Color(0, 0, 0, 1)
+shader_parameter/outline_color = Color(0.647059, 0.952941, 0.988235, 1)
+shader_parameter/frame_size = Vector2(16, 16)
 
 [node name="Player" type="CharacterBody2D"]
 z_index = 5

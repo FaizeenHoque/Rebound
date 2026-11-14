@@ -61,7 +61,7 @@ def first_fall():
     m.put(76, 10, "E")
     m.hint(2, 11, "A/D OR ARROWS: MOVE")
     m.hint(18, 11, "SPACE: JUMP")
-    m.hint(22, 12, "PINK HURTS")
+    m.hint(22, 12, "POINTY = OUCHIE")
     m.hint(31, 9, "FALLING IS NOT THE END")
     m.hint(31, 10, "YOU ALWAYS BOUNCE BACK")
     m.hint(56, 7, "THE WAY UP")

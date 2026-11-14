@@ -18,7 +18,7 @@ const CITY_SIZE := Vector2(576, 324)
 const SKY_SCROLL := 0.04
 const NEAR_SCROLL := 0.5
 ## Dims the (bright, busy) skyline so the robot, flyers and hints stay readable.
-const CITY_TINT := Color(0.6, 0.6, 0.72)
+const CITY_TINT := Color(0.45, 0.45, 0.55)
 
 @export var autoscroll_speed := 0.0
 

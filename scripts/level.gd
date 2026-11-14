@@ -183,7 +183,6 @@ func _process(delta: float) -> void:
 		for d in _decor:
 			if d.has_meta("anim") and randf() < 0.5:
 				d.frame = d.frame ^ 1
-		terrain.toggle_anim()
 	var mat: ShaderMaterial = screen_fx.material
 	var g: float = mat.get_shader_parameter("glitch")
 	if g > 0.0:
@@ -533,25 +532,15 @@ func _build_terrain() -> void:
 						mask |= 4
 					if not is_solid(x - 1, y):
 						mask |= 8
-					var variant := 1 if rng.randf() < 0.25 else 0
-					terrain.add_tile(Rect2(mask * 8, variant * 8, 8, 8), at)
+					terrain.add_solid(at, mask)
 					_maybe_decor(x, y, mask, rng)
 				"-":
-					var l := cell(x - 1, y) == "-"
-					var r := cell(x + 1, y) == "-"
-					var kind := 1
-					if not l and not r:
-						kind = 3
-					elif not l:
-						kind = 0
-					elif not r:
-						kind = 2
-					terrain.add_tile(Rect2(kind * 8, 16, 8, 8), at)
+					terrain.add_platform(at)
 				"^":
-					terrain.add_anim_tile(Rect2(32, 16, 8, 8), Rect2(40, 16, 8, 8), at)
+					terrain.add_spike(at, true)
 					spike_rects.append(Rect2(at + Vector2(1, 3), Vector2(6, 5)))
 				"v":
-					terrain.add_anim_tile(Rect2(48, 16, 8, 8), Rect2(56, 16, 8, 8), at)
+					terrain.add_spike(at, false)
 					spike_rects.append(Rect2(at + Vector2(1, 0), Vector2(6, 5)))
 	terrain.queue_redraw()
 	_build_collision()
