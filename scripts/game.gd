@@ -1,5 +1,5 @@
 extends Node
-## Global game state: input map, audio, level flow and scene transitions.
+## Global game state: input map, audio, level flow and scene changes.
 ## Registered as the "Game" autoload.
 
 const LEVELS := [
@@ -27,7 +27,7 @@ const VOICE_SLOTS := ["death", "rebound", "echo", "complete", "plate_on", "plate
 ## Lines that always take the waiting spot (replacing whatever was queued).
 const PRIORITY_LINES := ["flyer_kill"]
 
-## Set by the automated test runner: disables scene transitions on completion.
+## Set by the automated test runner: disables scene changes on completion.
 var test_mode := false
 var current_level := 0
 var failures := 0
@@ -39,8 +39,7 @@ var _next_voice := 0
 var _voice_line: AudioStreamPlayer
 var _queued_line := []  # [slot, volume_db] waiting for the voice channel
 var _music: AudioStreamPlayer
-var _fade: ColorRect
-var _transitioning := false
+var _changing := false
 var _quitting := false
 
 
@@ -62,7 +61,6 @@ func _ready() -> void:
 	add_child(_voice_line)
 	_voice_line.finished.connect(_play_queued_line)
 	_setup_music()
-	_setup_fade()
 
 
 func _notification(what: int) -> void:
@@ -218,36 +216,13 @@ func level_completed() -> void:
 		change_scene(END_SCREEN)
 
 
-func is_transitioning() -> bool:
-	return _transitioning
-
-
+## Switches scene instantly (no transition). Ignores repeat requests made in
+## the same frame, e.g. a level completing while a button is pressed.
 func change_scene(path: String) -> void:
-	if _transitioning:
+	if _changing:
 		return
-	_transitioning = true
-	var mat: ShaderMaterial = _fade.material
-	var tw := create_tween()
-	tw.tween_method(func(v: float) -> void: mat.set_shader_parameter("progress", v), 0.0, 1.0, 0.35)
-	await tw.finished
+	_changing = true
 	get_tree().paused = false
 	get_tree().change_scene_to_file(path)
 	await get_tree().process_frame
-	var tw2 := create_tween()
-	tw2.tween_method(func(v: float) -> void: mat.set_shader_parameter("progress", v), 1.0, 0.0, 0.35)
-	await tw2.finished
-	_transitioning = false
-
-
-func _setup_fade() -> void:
-	var layer := CanvasLayer.new()
-	layer.layer = 100
-	add_child(layer)
-	_fade = ColorRect.new()
-	_fade.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var mat := ShaderMaterial.new()
-	mat.shader = load("res://shaders/transition.gdshader")
-	mat.set_shader_parameter("progress", 0.0)
-	_fade.material = mat
-	layer.add_child(_fade)
+	_changing = false
