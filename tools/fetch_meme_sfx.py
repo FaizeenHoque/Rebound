@@ -5,13 +5,14 @@ Clips come from myinstants.com. They are NOT clearly licensed.
 Each clip is: leading silence removed -> trimmed to the
 slot's max length -> faded out -> loudness-normalised -> mono 44.1 kHz OGG.
 
-Run: python3 tools/fetch_meme_sfx.py [download_dir]
+Run: python3 tools/fetch_meme_sfx.py [download_dir] [slot ...]   (default: every slot)
 Needs: ffmpeg + ffprobe on PATH.
 """
 import os
 import subprocess
 import sys
 import tempfile
+import time
 import urllib.request
 
 BASE = "https://www.myinstants.com/media/sounds/"
@@ -44,15 +45,47 @@ MANIFEST = {
         ("owen-wilson-wow-8.mp3", 2.0, ""),
     ],
     "select": [("bubble-pop.mp3", 0.2, "")],
+    # flying enemies: chatter while they fly, bonk when stomped, mock when they get you
+    "flyer_chatter": [
+        ("cat-meow_Li0Ycr1.mp3", 1.0, ""),
+        ("deep-meow_Wt1vUzN.mp3", 1.2, ""),
+        ("huh-cat-meme.mp3", 1.2, ""),
+        ("pop-cat-original-meme.mp3", 0.8, ""),
+        ("cat-mouth-noise-192-kbps.mp3", 0.6, ""),
+        ("0045-nyan.mp3", 1.2, ""),
+        ("anime-wow-sound-effect.mp3", 1.2, ""),
+    ],
+    "flyer_pop": [
+        ("bonk-doge-sfx.mp3", 1.0, ""),
+        ("bamboo-hit-anime-bonk-sound.mp3", 1.0, ""),
+        ("big-head-bonk-sound-effect-low-pitched.mp3", 1.0, ""),
+        ("bonk-and-cymbal.mp3", 1.2, ""),
+    ],
+    "flyer_kill": [
+        ("frankly-thats-a-skill-issue.mp3", 2.5, ""),
+        ("halo-announcer-skill-issue.mp3", 2.0, ""),
+        ("capone-oh-no_JSNHmad.mp3", 2.0, ""),
+        ("oh-hell-no_aQX7VTp.mp3", 2.0, ""),
+        ("among-us-dead-body-reported-sound-effect_BsczDVE.mp3", 2.5, ""),
+    ],
 }
 
 
 def download(name, dl_dir):
     path = os.path.join(dl_dir, name)
+    for attempt in range(5):
+        if os.path.exists(path):
+            break
+        try:
+            req = urllib.request.Request(BASE + name, headers={"User-Agent": UA})
+            with urllib.request.urlopen(req, timeout=30) as r:
+                data = r.read()
+            with open(path, "wb") as f:
+                f.write(data)
+        except OSError:
+            time.sleep(2 + attempt * 2)  # the site resets connections under load
     if not os.path.exists(path):
-        req = urllib.request.Request(BASE + name, headers={"User-Agent": UA})
-        with urllib.request.urlopen(req, timeout=30) as r, open(path, "wb") as f:
-            f.write(r.read())
+        raise RuntimeError(f"could not download {name}")
     return path
 
 
@@ -82,7 +115,10 @@ def main():
     dl_dir = sys.argv[1] if len(sys.argv) > 1 else tempfile.mkdtemp(prefix="meme_sfx_")
     os.makedirs(dl_dir, exist_ok=True)
     os.makedirs(OUT, exist_ok=True)
+    only = set(sys.argv[2:])
     for slot, clips in MANIFEST.items():
+        if only and slot not in only:
+            continue
         for i, (name, max_len, extra) in enumerate(clips):
             src = download(name, dl_dir)
             dst = os.path.join(OUT, f"{slot}_{i}.ogg")
