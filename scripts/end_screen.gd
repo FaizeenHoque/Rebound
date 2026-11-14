@@ -72,7 +72,7 @@ func _ready() -> void:
 		tw.tween_callback(func() -> void:
 			var pop := create_tween()
 			pop.tween_property(_memes[i], "scale", Vector2(0.5, 0.5), 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-			Game.sfx("flyer_chatter" if i % 2 == 0 else "flyer_pop", -6.0, 0.25))
+			Game.sfx(Flyer.voice_slot(_memes[i].texture, "flyer_chatter" if i % 2 == 0 else "flyer_pop"), -6.0, 0.25))
 		tw.tween_interval(0.18)
 	tw.tween_interval(0.2)
 	tw.tween_property(line1, "visible_ratio", 1.0, 1.0)

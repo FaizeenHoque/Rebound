@@ -76,7 +76,8 @@ func _process(delta: float) -> void:
 	_chatter_t -= delta
 	if _chatter_t <= 0.0:
 		_chatter_t = randf_range(2.5, 5.0)
-		Game.sfx("flyer_chatter", -16.0, 0.3)
+		# the pop cat on the floor is pixel-cat-meme-3: it snores now and then
+		Game.sfx("snore" if randf() < 0.3 else "flyer_chatter", -16.0, 0.3)
 	var run_frame := 8 + int(_t * 12.0) % 6
 	robot.frame = run_frame
 	# the echo is the same run, a beat behind

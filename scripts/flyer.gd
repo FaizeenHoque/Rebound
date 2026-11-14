@@ -18,6 +18,16 @@ const SKINS: Array[Texture2D] = [
 ## Ticks between chatter clips (each flyer picks a new gap every time).
 const CHATTER_MIN := 45
 const CHATTER_MAX := 110
+## The screaming cat (pixel-cat-meme-3) snores instead of meowing; its clip
+## is longer, so it waits longer between snores.
+const SNORE_GAP_MIN := 130
+const SNORE_GAP_MAX := 200
+
+
+## The sound slot a meme image "says" (used by flyers, the death pop-up, the
+## menus and the ending).
+static func voice_slot(tex: Texture2D, default_slot := "flyer_chatter") -> String:
+	return "snore" if tex and tex.resource_path.get_file() == "pixel-cat-meme-3.png" else default_slot
 const FRAME := 16
 const FRAME_TICKS := 8
 ## Hitbox relative to the centre.
@@ -61,9 +71,14 @@ func place(tick: int) -> void:
 	position = pos_at(tick)
 	# meme chatter the whole way across (cosmetic only, so randomness is fine)
 	if tick - spawn_tick >= _next_chatter:
-		_next_chatter = tick - spawn_tick + randi_range(CHATTER_MIN, CHATTER_MAX)
-		voice.stream = Game.pick("flyer_chatter")
-		voice.pitch_scale = randf_range(0.8, 1.45)
+		var slot := voice_slot(sprite.texture)
+		if slot == "snore":
+			_next_chatter = tick - spawn_tick + randi_range(SNORE_GAP_MIN, SNORE_GAP_MAX)
+			voice.pitch_scale = randf_range(0.9, 1.1)
+		else:
+			_next_chatter = tick - spawn_tick + randi_range(CHATTER_MIN, CHATTER_MAX)
+			voice.pitch_scale = randf_range(0.8, 1.45)
+		voice.stream = Game.pick(slot)
 		voice.play()
 	if sprite.hframes > 1:
 		sprite.frame = ((tick - spawn_tick) / FRAME_TICKS) % sprite.hframes

@@ -19,7 +19,7 @@ const SFX := {
 	"jump": 1, "land": 1, "death": 6, "rebound": 1, "echo": 1,
 	"plate_on": 1, "plate_off": 1, "door_open": 1, "door_close": 1,
 	"bounce": 1, "complete": 2, "respawn": 1, "select": 1,
-	"flyer_chatter": 7, "flyer_pop": 4, "flyer_kill": 5,
+	"flyer_chatter": 7, "flyer_pop": 4, "flyer_kill": 5, "snore": 1,
 }
 ## Voice lines share one channel so they never talk over each other: a new
 ## line waits for the current one (at most one waits; extras are dropped).

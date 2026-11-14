@@ -76,6 +76,8 @@ func meme_popup() -> void:
 		i = (i + 1) % MEMES.size()
 	_last_meme = i
 	_meme.texture = MEMES[i]
+	if Flyer.voice_slot(MEMES[i], "") == "snore":
+		Game.sfx("snore", -2.0, 0.0)
 	_meme.visible = true
 	_meme.modulate.a = 1.0
 	_meme.scale = Vector2(2.2, 2.2)
