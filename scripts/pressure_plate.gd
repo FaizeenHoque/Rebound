@@ -2,14 +2,15 @@ class_name PressurePlate
 extends Node2D
 ## Pressed while the player or an active echo stands on it.
 ## Origin = bottom-left corner of the plate (on the floor surface).
+## Drawn as a plain button: a black base with the terrain rim and a
+## channel-coloured bar that sinks when pressed.
 
-const TEXTURES := [preload("res://assets/sprites/plate_a.png"), preload("res://assets/sprites/plate_b.png")]
 const COLORS := [Color("#a78bfa"), Color("#60a5fa")]
+const WIDTH := 16.0
 
 var channel := 0
 var pressed := false
 
-@onready var sprite: Sprite2D = $Sprite
 @onready var sparks: CPUParticles2D = $Sparks
 
 
@@ -18,8 +19,16 @@ func setup(p_channel: int) -> void:
 
 
 func _ready() -> void:
-	sprite.texture = TEXTURES[channel]
 	sparks.color = COLORS[channel]
+
+
+func _draw() -> void:
+	var bar := Rect2(3, -4, WIDTH - 6, 1) if pressed else Rect2(3, -6, WIDTH - 6, 3)
+	draw_rect(bar, COLORS[channel])
+	draw_rect(Rect2(0, -3, WIDTH, 3), TileLayer.SILHOUETTE)
+	draw_rect(Rect2(0, -3, WIDTH, 1), TileLayer.RIM)
+	draw_rect(Rect2(0, -3, 1, 3), TileLayer.RIM)
+	draw_rect(Rect2(WIDTH - 1, -3, 1, 3), TileLayer.RIM)
 
 
 ## Feet must be in a thin band on top of the plate.
@@ -36,7 +45,7 @@ func set_pressed(p: bool) -> void:
 	if p == pressed:
 		return
 	pressed = p
-	sprite.frame = 1 if p else 0
+	queue_redraw()
 	if p:
 		sparks.restart()
 		sparks.emitting = true
