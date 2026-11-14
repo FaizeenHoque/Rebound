@@ -12,29 +12,32 @@ const T := 8
 # ["goto", px] (walk to x, then stop) ["autododge", on] (jump any low flyer that gets close)
 var SOLUTIONS := {
 	1: [
-		["playing"], ["dir", 1],
+		["playing"], ["autododge", true], ["dir", 1],
 		["x>=", 92], ["jump", 20],
 		["x>=", 182], ["jump", 20],
 		["x>=", 284], ["jump", 20],
 		["x>=", 362], ["jump", 20], ["floor"],
 		["x>=", 410], ["jump", 20], ["floor"],
 		# walk off into the well: the spring at the bottom is the way up
+		# (steer onto it, in case a cat-dodge jump shifted the approach)
+		["x>=", 508], ["goto", 528], ["wait", 30], ["dir", 1],
 	],
 	2: [
-		["playing"], ["dir", -1], ["x<=", 50], ["dir", 0],
+		["playing"], ["autododge", true], ["dir", -1], ["x<=", 50], ["dir", 0],
 		["wait", 240], ["rebound"],
 		["playing"], ["dir", 1], ["x>=", 252], ["jump", 20],
 	],
 	3: [
 		# attempt 1: spring up to the ledge and hold the plate
-		["playing"], ["dir", -1], ["x<=", 40], ["floor"], ["goto", 16],
+		["playing"], ["autododge", true], ["dir", -1], ["x<=", 40], ["floor"], ["goto", 16],
 		["wait", 360], ["rebound"],
-		# attempt 2: hop the spikes and run through the held door
+		# attempt 2: hop the spikes and run through the held door to the exit
 		["playing"], ["dir", 1], ["x>=", 180], ["jump", 20], ["floor"],
+		["x>=", 380], ["goto", 404],
 	],
 	4: [
 		# attempt 1: bounce up, hold plate A, then hold plate B
-		["playing"], ["dir", -1], ["x<=", 30], ["wait", 50], ["dir", 1],
+		["playing"], ["autododge", true], ["dir", -1], ["x<=", 30], ["wait", 50], ["dir", 1],
 		["x>=", 158], ["dir", 0], ["wait", 180],
 		["dir", 1], ["x>=", 206], ["jump", 20],
 		["x>=", 262], ["jump", 20], ["floor"],
@@ -44,6 +47,9 @@ var SOLUTIONS := {
 		["x>=", 280], ["jump", 20], ["floor"],
 		["x>=", 328], ["jump", 20], ["floor"],
 		["x>=", 392], ["open", 1],
+		# through door B, then onto the spring up to the exit (steer onto it so
+		# a cat-dodge jump can't carry us over it)
+		["x>=", 410], ["goto", 472], ["wait", 30], ["dir", 1],
 	],
 	5: [
 		# attempt 1: reach the plate, dodging flyers, then hold it while they keep coming
@@ -75,13 +81,13 @@ var SOLUTIONS := {
 
 # Solo runs that must FAIL: proves doors block and the echo is required.
 var NEGATIVE := {
-	2: [["playing"], ["dir", 1], ["x>=", 252], ["jump", 20]],
+	2: [["playing"], ["autododge", true], ["dir", 1], ["x>=", 252], ["jump", 20]],
 	3: [
-		["playing"], ["dir", -1], ["x<=", 40], ["floor"], ["goto", 16],
+		["playing"], ["autododge", true], ["dir", -1], ["x<=", 40], ["floor"], ["goto", 16],
 		["wait", 60], ["dir", 1], ["x>=", 180], ["jump", 20], ["floor"],
 	],
 	4: [
-		["playing"], ["dir", -1], ["x<=", 30], ["wait", 50], ["dir", 1],
+		["playing"], ["autododge", true], ["dir", -1], ["x<=", 30], ["wait", 50], ["dir", 1],
 		["x>=", 158], ["dir", 0], ["wait", 180], ["rebound"],
 		["playing"], ["dir", 1], ["x>=", 236], ["open", 0],
 		["x>=", 280], ["jump", 20], ["floor"],

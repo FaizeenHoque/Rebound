@@ -67,6 +67,8 @@ def first_fall():
     m.hint(56, 7, "THE WAY UP")
     m.hint(56, 8, "IS DOWN (BIG BRAIN)")
     m.hint(72, 5, "THE EXIT (REAL)")
+    m.hint(40, 12, "CATS? JUMP OVER OR BONK 'EM")
+    m.wave(17, 60, 360, 35)               # a few slow cats to meet
     return m
 
 
@@ -87,6 +89,7 @@ def meet_your_echo():
     m.hint(19, 9, "YOUR ECHO COPIES YOUR HOMEWORK")
     m.hint(36, 6, "TOO FAR TO DO ALONE...")
     m.hint(36, 7, "BRO NEEDS A HOMIE")
+    m.wave(17, 90, 320, 40)
     return m
 
 
@@ -113,6 +116,7 @@ def bounce_back():
     m.put(58, 25, "oo")
     m.fill(62, 16, 70, 17)                # exit ledge (top y=16)
     m.put(67, 15, "E")
+    m.wave(25, 60, 280, 50)               # slow floor lane
     m.hint(5, 20, "ONE ECHO.")
     m.hint(5, 21, "TWO DOORS.")
     m.hint(19, 12, "PLAN YOUR FAILURE. BIG BRAIN")
@@ -143,7 +147,7 @@ def incoming():
 
 def spring_loaded():
     # The plate is on a high ledge you can only reach with the spring: the
-    # echo works vertically too. No flyers yet; they arrive in Incoming.
+    # echo works vertically too, while slow cats drift along the floor.
     m = Map(56, 23)
     m.border()
     m.fill(0, 18, 55, 22)                 # floor, top surface y=18
@@ -155,6 +159,7 @@ def spring_loaded():
     m.fill(40, 1, 40, 12)                 # wall above the door
     m.put(40, 13, "A")                    # door A, rows 13..17
     m.put(50, 17, "E")
+    m.wave(17, 60, 300, 45)               # slow floor lane
     m.hint(13, 4, "UP IS THE WAY (NO CAP)")
     m.hint(13, 5, "TO HOLD THE DOOR")
     m.hint(29, 10, "STILL TOO FAR?")
