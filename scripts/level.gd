@@ -267,6 +267,8 @@ func _kill_player(voluntary := false, by_flyer := false) -> void:
 	if _rec_pos.size() < MIN_ECHO_TICKS:
 		sub = "TOO QUICK TO LEAVE AN ECHO"
 	hud.fail_message(line[0], sub)
+	hud.meme_popup()
+	Game.sfx("land", -2.0, 0.0)  # vine boom
 	_leave_fail_mark(player.position)
 	player.die()
 	Game.sfx("rebound" if voluntary else "death")
