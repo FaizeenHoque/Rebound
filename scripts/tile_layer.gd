@@ -15,6 +15,16 @@ var _platforms: Array = []  # [at: Vector2]
 var _spikes: Array = []     # [at: Vector2, points_up: bool]
 
 
+## The robot's look outside levels (menus): black silhouette, light outline.
+static func silhouette_material() -> ShaderMaterial:
+	var m := ShaderMaterial.new()
+	m.shader = preload("res://shaders/flash.gdshader")
+	m.set_shader_parameter("base_tint", SILHOUETTE)
+	m.set_shader_parameter("outline_color", RIM)
+	m.set_shader_parameter("frame_size", Vector2(16, 16))
+	return m
+
+
 ## mask bits: 1 = top exposed, 2 = right, 4 = bottom, 8 = left.
 func add_solid(at: Vector2, mask: int) -> void:
 	_solids.append([at, mask])
