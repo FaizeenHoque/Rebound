@@ -61,6 +61,8 @@ MANIFEST = {
         ("big-head-bonk-sound-effect-low-pitched.mp3", 1.0, ""),
         ("bonk-and-cymbal.mp3", 1.2, ""),
     ],
+    # pixel-cat-meme-3 (the screaming cat) snores instead of meowing
+    "snore": [("hoooo-snoring.mp3", 2.0, "")],
     "flyer_kill": [
         ("frankly-thats-a-skill-issue.mp3", 2.5, ""),
         ("halo-announcer-skill-issue.mp3", 2.0, ""),
