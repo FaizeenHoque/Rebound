@@ -1,3 +1,7 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# Export output (itch.io builds)
+/build/*
+!/build/.gdignore

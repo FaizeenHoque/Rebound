@@ -20,6 +20,8 @@ func _ready() -> void:
 	play_btn.pressed.connect(_on_play)
 	$Buttons/Levels.pressed.connect(_on_levels)
 	$Buttons/Quit.pressed.connect(_on_quit)
+	# a browser tab can't be closed by the game, so there's nothing to quit to
+	$Buttons/Quit.visible = not OS.has_feature("web")
 	play_btn.grab_focus()
 	play_btn.focus_entered.connect(func() -> void: Game.sfx("select", -8.0))
 	$Buttons/Levels.focus_entered.connect(func() -> void: Game.sfx("select", -8.0))
