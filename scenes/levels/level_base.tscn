@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bve21dc2nawxu"]
 
 [ext_resource type="Script" uid="uid://j84ycsj4ua1a" path="res://scripts/level.gd" id="1_level"]
+[ext_resource type="Script" uid="uid://bnfsp12jsqrpm" path="res://scripts/level_background.gd" id="2_bg"]
 [ext_resource type="Script" uid="uid://c1uibkdifuhcf" path="res://scripts/tile_layer.gd" id="3_tiles"]
 [ext_resource type="PackedScene" path="res://scenes/echo/echo.tscn" id="4_echo"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="5_player"]
@@ -17,6 +18,10 @@ shader_parameter/flash_color = Color(1, 1, 1, 1)
 
 [node name="Level" type="Node2D" unique_id=727831090]
 script = ExtResource("1_level")
+
+[node name="Background" type="Node2D" parent="." unique_id=1187402215]
+z_index = -10
+script = ExtResource("2_bg")
 
 [node name="Terrain" type="Node2D" parent="." unique_id=347880227]
 script = ExtResource("3_tiles")

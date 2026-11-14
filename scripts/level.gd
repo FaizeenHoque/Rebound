@@ -128,7 +128,10 @@ func _ready() -> void:
 	_respawn_pad.z_index = 1
 	objects.add_child(_respawn_pad)
 	_respawn_pad.sprite.texture = REBOUND_PAD_TEX
-	background.setup(Vector2(map_w * TILE, map_h * TILE))
+	if LevelBackground.has_city(level_number):
+		background.setup_city(level_number, Vector2(map_w * TILE, map_h * TILE))
+	else:
+		background.setup(Vector2(map_w * TILE, map_h * TILE))
 	player.fx_parent = fx
 	player.landed.connect(_on_player_landed)
 	camera.setup(player, Rect2(0, 0, map_w * TILE, map_h * TILE))

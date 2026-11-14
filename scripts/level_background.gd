@@ -1,11 +1,50 @@
 class_name LevelBackground
 extends Node2D
-## Layered parallax background: far grid, ruined server skyline, drifting motes.
+## Layered parallax background. Levels use a city skyline (setup_city);
+## the menus use the far grid (setup).
 
 const FAR := preload("res://assets/sprites/bg_far.png")
 const MID := preload("res://assets/sprites/bg_mid.png")
+## CraftPix "free city backgrounds" pack: per city, its parallax layers from
+## the sky (1.png) to the nearest buildings. The other files in each folder
+## are pre-flattened composites and aren't used.
+const CITY_DIR := "res://assets/sprites/free-city-backgrounds-pixel-art/city %d/%d.png"
+const CITY_LAYERS := {
+	1: [1, 2, 3, 4, 5], 2: [1, 2, 3, 4, 5, 6], 3: [1, 2, 3, 4, 5], 4: [1, 2, 3, 4, 5, 7],
+	5: [1, 2, 3, 4, 5], 6: [1, 2, 3, 4, 5, 6], 7: [1, 2, 3, 4, 5], 8: [1, 2, 3, 4, 5],
+}
+const CITY_SIZE := Vector2(576, 324)
+## Horizontal parallax of the sky and of the nearest buildings.
+const SKY_SCROLL := 0.04
+const NEAR_SCROLL := 0.5
+## Dims the (bright, busy) skyline so the robot, flyers and hints stay readable.
+const CITY_TINT := Color(0.6, 0.6, 0.72)
 
 @export var autoscroll_speed := 0.0
+
+
+static func has_city(city: int) -> bool:
+	return CITY_LAYERS.has(city)
+
+
+## City skyline at 1:1 pixel scale, its bottom on the level's bottom edge.
+## Layers scroll horizontally at increasing speed and tile seamlessly.
+func setup_city(city: int, level_size: Vector2) -> void:
+	var layers: Array = CITY_LAYERS[city]
+	modulate = CITY_TINT
+	for i in layers.size():
+		var par := Parallax2D.new()
+		var t := float(i) / maxf(layers.size() - 1, 1.0)
+		par.scroll_scale = Vector2(lerpf(SKY_SCROLL, NEAR_SCROLL, t), 1.0)
+		par.repeat_size = Vector2(CITY_SIZE.x, 0)
+		par.repeat_times = 3
+		par.autoscroll = Vector2(-autoscroll_speed * t, 0)
+		var spr := Sprite2D.new()
+		spr.texture = load(CITY_DIR % [city, layers[i]])
+		spr.centered = false
+		spr.position = Vector2(0, level_size.y - CITY_SIZE.y)
+		par.add_child(spr)
+		add_child(par)
 
 func setup(level_size: Vector2) -> void:
 	var far := Parallax2D.new()
