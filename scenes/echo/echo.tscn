@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://jccipyhbol77"]
 
 [ext_resource type="Script" uid="uid://dbr1pmvqqn28l" path="res://scripts/echo.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://s7wimsqch1hb" path="res://assets/sprites/robot.png" id="2_tex"]
+[ext_resource type="Texture2D" path="res://assets/sprites/shadow.png" id="2_tex"]
 [ext_resource type="Shader" uid="uid://fud0xcgw1mio" path="res://shaders/echo.gdshader" id="3_shader"]
 [ext_resource type="Texture2D" uid="uid://piry4cmhexd7" path="res://assets/sprites/fx_star.png" id="4_star"]
 

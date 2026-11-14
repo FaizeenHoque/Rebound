@@ -2,7 +2,7 @@ extends Control
 ## Ending: every failure from the run lines up behind the robot as an echo,
 ## the meme crew pops in, then the closing lines land. GG EZ.
 
-const ROBOT := preload("res://assets/sprites/robot.png")
+const ROBOT := preload("res://assets/sprites/shadow.png")
 const ECHO_SHADER := preload("res://shaders/echo.gdshader")
 const MAX_ECHOES := 14
 const FLOOR_Y := 132.0

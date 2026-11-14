@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/sprites/robot.png" id="2_tex"]
+[ext_resource type="Texture2D" path="res://assets/sprites/shadow.png" id="2_tex"]
 [ext_resource type="Shader" path="res://shaders/flash.gdshader" id="3_flash"]
 [ext_resource type="Texture2D" path="res://assets/sprites/fx_puff.png" id="4_puff"]
 
@@ -12,8 +12,8 @@ size = Vector2(8, 12)
 shader = ExtResource("3_flash")
 shader_parameter/flash = 0.0
 shader_parameter/flash_color = Color(1, 1, 1, 1)
-shader_parameter/base_tint = Color(0, 0, 0, 1)
-shader_parameter/outline_color = Color(0.647059, 0.952941, 0.988235, 1)
+shader_parameter/base_tint = Color(1, 1, 1, 1)
+shader_parameter/outline_color = Color(0.647, 0.953, 0.988, 0.35)
 shader_parameter/frame_size = Vector2(16, 16)
 
 [node name="Player" type="CharacterBody2D"]

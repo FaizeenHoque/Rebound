@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dwexk2pps6mle" path="res://scripts/main_menu.gd" id="1_script"]
 [ext_resource type="Script" uid="uid://bnfsp12jsqrpm" path="res://scripts/level_background.gd" id="2_bg"]
-[ext_resource type="Texture2D" uid="uid://s7wimsqch1hb" path="res://assets/sprites/robot.png" id="3_robot"]
+[ext_resource type="Texture2D" path="res://assets/sprites/shadow.png" id="3_robot"]
 [ext_resource type="Shader" uid="uid://fud0xcgw1mio" path="res://shaders/echo.gdshader" id="4_echo"]
 
 [sub_resource type="ShaderMaterial" id="echo_mat"]

@@ -22,7 +22,7 @@ const BOUNCE_VELOCITY := -350.0
 ## Hitbox used for hazards / plates (relative to the feet origin).
 const HITBOX := Rect2(-3, -11, 6, 10)
 
-# frame indices in robot.png (8 columns)
+# frame indices in shadow.png (8 columns)
 const ANIMS := {
 	"idle": {"frames": [0, 1, 2, 1, 0, 3], "fps": 5.0},
 	"run": {"frames": [8, 9, 10, 11, 12, 13], "fps": 12.0},

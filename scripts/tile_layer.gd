@@ -9,18 +9,22 @@ const TILE := 8
 const SILHOUETTE := Color.BLACK
 const RIM := Color("#a5f3fc")
 const DANGER := Color("#f472b6")
+## Faint glow around the shadow fighter: enough to read against the city, not
+## so strong that its thin limbs turn white.
+const FIGHTER_GLOW := Color(0.647, 0.953, 0.988, 0.35)
 
 var _solids: Array = []     # [at: Vector2, exposed-side mask: int]
 var _platforms: Array = []  # [at: Vector2]
 var _spikes: Array = []     # [at: Vector2, points_up: bool]
 
 
-## The robot's look outside levels (menus): black silhouette, light outline.
+## The shadow fighter's look outside levels (menus): the art is already black,
+## so no tint, just the light outline.
 static func silhouette_material() -> ShaderMaterial:
 	var m := ShaderMaterial.new()
 	m.shader = preload("res://shaders/flash.gdshader")
-	m.set_shader_parameter("base_tint", SILHOUETTE)
-	m.set_shader_parameter("outline_color", RIM)
+	m.set_shader_parameter("base_tint", Color.WHITE)
+	m.set_shader_parameter("outline_color", FIGHTER_GLOW)
 	m.set_shader_parameter("frame_size", Vector2(16, 16))
 	return m
 
