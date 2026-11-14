@@ -1,14 +1,16 @@
 extends Control
 ## Ending: every failure from the run lines up behind the robot as an echo,
-## then the closing lines land. Short and skippable to the menu button.
+## the meme crew pops in, then the closing lines land. GG EZ.
 
 const ROBOT := preload("res://assets/sprites/robot.png")
 const ECHO_SHADER := preload("res://shaders/echo.gdshader")
 const MAX_ECHOES := 14
 const FLOOR_Y := 132.0
+const MEME_Y := 100.0
 
 var _echoes: Array[Sprite2D] = []
 var _robot: Sprite2D
+var _memes: Array[Sprite2D] = []
 var _t := 0.0
 
 @onready var line1: Label = $Line1
@@ -19,9 +21,19 @@ var _t := 0.0
 
 
 func _ready() -> void:
-	$Background.setup(Vector2(320, 180))
+	$Background.setup_city(8, Vector2(320, 180))
+	$Floor.color = TileLayer.SILHOUETTE
+	$FloorEdge.color = TileLayer.RIM
+	$Title.text = "GG EZ"
+	var sub := Label.new()
+	sub.text = "SIMULATION ESCAPED"
+	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	sub.position = Vector2(0, 34)
+	sub.size = Vector2(320, 8)
+	sub.modulate = Color("#fde047")
+	add_child(sub)
 	var falls := Game.failures
-	stats.text = "FALLS: %d     TIMES YOU BOUNCED BACK: %d" % [falls, falls]
+	stats.text = "FALLS: %d   (SKILL ISSUE COUNTER)" % falls
 	for l in [line1, line2]:
 		l.visible_ratio = 0.0
 	stats.modulate.a = 0.0
@@ -31,7 +43,16 @@ func _ready() -> void:
 		Game.to_main_menu())
 
 	_robot = _make_robot(false)
+	_robot.material = TileLayer.silhouette_material()
 	_robot.position = Vector2(250, FLOOR_Y)
+	# the meme crew, waiting to pop in
+	for i in Hud.MEMES.size():
+		var m := Sprite2D.new()
+		m.texture = Hud.MEMES[i]
+		m.scale = Vector2.ZERO
+		m.position = Vector2(60 + i * 40, MEME_Y)
+		add_child(m)
+		_memes.append(m)
 	var shown := mini(falls, MAX_ECHOES)
 	for i in shown:
 		var e := _make_robot(true)
@@ -46,7 +67,14 @@ func _ready() -> void:
 			_echoes[i].visible = true
 			Game.sfx("select", -10.0 + i * 0.3, 0.0))
 		tw.tween_interval(0.12)
-	tw.tween_interval(0.3)
+	tw.tween_interval(0.2)
+	for i in _memes.size():
+		tw.tween_callback(func() -> void:
+			var pop := create_tween()
+			pop.tween_property(_memes[i], "scale", Vector2(0.5, 0.5), 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+			Game.sfx("flyer_chatter" if i % 2 == 0 else "flyer_pop", -6.0, 0.25))
+		tw.tween_interval(0.18)
+	tw.tween_interval(0.2)
 	tw.tween_property(line1, "visible_ratio", 1.0, 1.0)
 	tw.tween_interval(0.4)
 	tw.tween_callback(func() -> void:
@@ -80,4 +108,7 @@ func _process(delta: float) -> void:
 	# the echoes idle in a gentle wave; the robot hops for joy once freed
 	for i in _echoes.size():
 		_echoes[i].frame = [0, 1, 2, 1][int(_t * 5.0 + i) % 4]
-	_robot.frame = [0, 1, 2, 1][int(_t * 5.0) % 4]	
+	_robot.frame = [0, 1, 2, 1][int(_t * 5.0) % 4]
+	for i in _memes.size():
+		_memes[i].position.y = MEME_Y - absf(sin(_t * 5.0 + i * 0.9)) * 6.0
+		_memes[i].rotation = sin(_t * 3.0 + i) * 0.12	
